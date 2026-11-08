@@ -31,7 +31,7 @@ var FAQ = [
 
 var TIER_LABEL = { met: '충족', unmet: '미달', unknown: '모름', none: '' };
 
-function chipStyle(on) { return on ? { bg: '#E8EDFF', fg: '#1A3FCC', bd: '2px solid #2453FF', fw: '700' } : { bg: '#FFFFFF', fg: '#14161A', bd: '1px solid #D9DCE3', fw: '400' }; }
+function chipStyle(on) { return on ? { bg: '#17191C', fg: '#FFFFFF', bd: '1px solid #17191C', fw: '600' } : { bg: '#F3F4F6', fg: '#3A3F46', bd: '1px solid #F3F4F6', fw: '500' }; }
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
 function initialRecords() {
@@ -91,10 +91,10 @@ class Component extends DCLogic {
     var v = {};
     screens.forEach(function (k) { v['is_' + k] = s.screen === k; });
     v.showTabs = ['home', 'cards', 'status', 'more'].indexOf(s.screen) >= 0;
-    v.tabHome = s.screen === 'home' ? '#1A3FCC' : '#5B616E';
-    v.tabCards = s.screen === 'cards' ? '#1A3FCC' : '#5B616E';
-    v.tabStatus = s.screen === 'status' ? '#1A3FCC' : '#5B616E';
-    v.tabMore = s.screen === 'more' ? '#1A3FCC' : '#5B616E';
+    v.tabHome = s.screen === 'home' ? '#1B64F2' : '#646B75';
+    v.tabCards = s.screen === 'cards' ? '#1B64F2' : '#646B75';
+    v.tabStatus = s.screen === 'status' ? '#1B64F2' : '#646B75';
+    v.tabMore = s.screen === 'more' ? '#1B64F2' : '#646B75';
     v.goHome = this.go('home'); v.goCards = this.go('cards'); v.goStatus = this.go('status'); v.goMore = this.go('more');
     v.goPlace = this.go('place'); v.goAdd = this.go('add'); v.goRequest = this.go('request'); v.goVerify = this.go('verify'); v.goMonthCheck = this.go('monthCheck');
     v.hasToast = !!s.toast; v.toast = s.toast;
@@ -134,16 +134,16 @@ class Component extends DCLogic {
       v.hasTips = b.tips.length > 0; v.bestTips = b.tips.map(function (t) { return { text: t }; });
       v.hasTie = rk.ties.length > 1;
       v.tieReason = rk.tieReason;
-      v.tieOptions = rk.options.map(function (o) { var on = o.r.card.id === b.card.id; return { tag: o.tag, name: o.r.card.name, why: o.why, bg: on ? '#E8EDFF' : '#FFFFFF', bd: on ? '2px solid #2453FF' : '1px solid #D9DCE3', on: function () { self.setState({ tiePick: o.r.card.id }); } }; });
+      v.tieOptions = rk.options.map(function (o) { var on = o.r.card.id === b.card.id; return { tag: o.tag, name: o.r.card.name, why: o.why, bg: on ? '#EEF3FF' : '#FFFFFF', bd: on ? '1.5px solid #1B64F2' : '1px solid #E5E7EB', on: function () { self.setState({ tiePick: o.r.card.id }); } }; });
       v.recordBest = function () { self.setState({ prev: 'home', screen: 'record', draft: { cardId: b.card.id, amount: String(amount), pay: s.pay } }); };
     }
     var rows = [];
-    rk.rest.forEach(function (r) { rows.push({ name: r.card.name, color: r.card.color, value: r.headline, reason: r.sub || r.parts.filter(function (p) { return p.value > 0; }).map(function (p) { return p.label; }).join(' + '), rc: '#5B616E', act: '', on: null }); });
+    rk.rest.forEach(function (r) { rows.push({ name: r.card.name, color: r.card.color, value: r.headline, reason: r.sub || r.parts.filter(function (p) { return p.value > 0; }).map(function (p) { return p.label; }).join(' + '), rc: '#646B75', act: '', on: null }); });
     rk.others.forEach(function (r) {
-      var row = { name: r.card.name, color: r.card.color, value: r.status === 'na' ? '계산 불가' : '혜택 없음', reason: r.reason, rc: '#5B616E', act: '', on: null };
-      if (r.conditional) { row.value = '최대 ' + fmt(r.maxValue) + '원'; row.rc = '#B54708'; row.act = '실적 입력'; row.on = function () { self.setState({ prev: 'home', screen: 'detail', detailId: r.card.id }); }; }
-      else if (r.reason.indexOf('미달') >= 0) { row.rc = '#B54708'; }
-      if (r.tips.length) { row.reason = r.reason + ' · ' + r.tips[0]; row.rc = '#1A3FCC'; row.act = '네이버페이로 보기'; row.on = function () { self.setState({ pay: 'naver', tiePick: null }); }; }
+      var row = { name: r.card.name, color: r.card.color, value: r.status === 'na' ? '계산 불가' : '혜택 없음', reason: r.reason, rc: '#646B75', act: '', on: null };
+      if (r.conditional) { row.value = '최대 ' + fmt(r.maxValue) + '원'; row.rc = '#C2410C'; row.act = '실적 입력'; row.on = function () { self.setState({ prev: 'home', screen: 'detail', detailId: r.card.id }); }; }
+      else if (r.reason.indexOf('미달') >= 0) { row.rc = '#C2410C'; }
+      if (r.tips.length) { row.reason = r.reason + ' · ' + r.tips[0]; row.rc = '#1B64F2'; row.act = '네이버페이로 보기'; row.on = function () { self.setState({ pay: 'naver', tiePick: null }); }; }
       if (r.status === 'na') { row.act = '왜?'; row.on = r.reason.indexOf('해외') >= 0 ? v.faqOverseas : v.faqNa; }
       rows.push(row);
     });
@@ -209,7 +209,7 @@ class Component extends DCLogic {
     // 내 카드
     v.myCards = s.cards.map(function (c) {
       var pend = c.status === 'pending';
-      return { name: c.name, color: c.color, sub: pend ? '요청 접수됨 · 검수가 끝나면 알려드려요' : c.type + ' · ' + c.benefits.slice(0, 2).map(function (bb) { return bb.label; }).join(', '), badge: pend ? '준비 중' : '검증됨', bbg: pend ? '#FFF1E0' : '#E7F6EE', bfg: pend ? '#8A3B00' : '#0B6B44', bd: pend ? '1px dashed #C4C8D1' : '1px solid #FFFFFF',
+      return { name: c.name, color: c.color, sub: pend ? '요청 접수됨 · 검수가 끝나면 알려드려요' : c.type + ' · ' + c.benefits.slice(0, 2).map(function (bb) { return bb.label; }).join(', '), badge: pend ? '준비 중' : '검증됨', bbg: pend ? '#FFF3EB' : '#FFFFFF', bfg: pend ? '#C2410C' : '#646B75', bd: pend ? '1px dashed #C7CCD3' : '1px solid transparent',
         on: pend ? v.faqMissing : function () { self.setState({ prev: 'cards', screen: 'detail', detailId: c.id, editUsed: false }); } };
     });
 
@@ -281,7 +281,7 @@ class Component extends DCLogic {
     v.statusCards = s.cards.filter(function (c) { return c.status !== 'pending'; }).map(function (c) {
       var caps = c.benefits.filter(function (bb) { return bb.cap && !(bb.member === true && !c.isMember) && !(bb.member === false && c.isMember); }).map(function (bb) { return { label: bb.label, text: fmt(bb.used || 0) + ' / ' + fmt(bb.cap) + '원', pct: Math.min(100, Math.round((bb.used || 0) / bb.cap * 100)) }; });
       var sf = shortfall(c);
-      return { name: c.name, color: c.color, hasTier: c.tierMin > 0, tierText: (Math.round(c.monthSpend / 1000) / 10) + '만 / ' + (c.tierMin / 10000) + '만원', tierPct: c.tierMin ? Math.min(100, Math.round(c.monthSpend / c.tierMin * 100)) : 0, barColor: sf > 0 ? '#E08A1E' : '#2453FF', badge: c.tierMin > 0 ? (sf > 0 ? fmt(sf / 10000) + '만원 남음' : '실적 충족') : '무실적', badgeColor: sf > 0 ? '#B54708' : '#0B6B44', caps: caps, hasCaps: caps.length > 0 };
+      return { name: c.name, color: c.color, hasTier: c.tierMin > 0, tierText: (Math.round(c.monthSpend / 1000) / 10) + '만 / ' + (c.tierMin / 10000) + '만원', tierPct: c.tierMin ? Math.min(100, Math.round(c.monthSpend / c.tierMin * 100)) : 0, barColor: sf > 0 ? '#E8590C' : '#1B64F2', badge: c.tierMin > 0 ? (sf > 0 ? fmt(sf / 10000) + '만원 남음' : '실적 충족') : '무실적', badgeColor: sf > 0 ? '#C2410C' : '#0F7B4A', caps: caps, hasCaps: caps.length > 0 };
     });
     v.curRecords = s.records.filter(function (r) { return r.month === '11월'; }).map(function (r) {
       return { text: r.merchant + ' · ' + r.cardName.replace('예시 ', ''), amount: fmt(r.amount) + '원 · ' + payName(r.pay), value: r.canceled ? '취소됨' : (r.expected > 0 ? '-' + fmt(r.expected) + '원' : '0원'), vc: r.canceled ? '#9AA1AF' : '#0B6B44', canCancel: !r.canceled, on: function () {

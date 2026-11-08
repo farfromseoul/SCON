@@ -17,12 +17,12 @@ var MERCHANTS = [
 
 function initialCards() {
   return [
-    { id: 'cafe', issuer: '예시A카드', name: '예시 카페 특화 체크', type: '체크', color: '#2453FF', tierMin: 300000, prevTier: 'met', monthSpend: 326000,
+    { id: 'cafe', issuer: '예시A카드', name: '예시 카페 특화 체크', type: '체크', color: '#1B64F2', tierMin: 300000, prevTier: 'met', monthSpend: 326000,
       benefits: [
         { label: '카페 20% 할인', cats: ['카페'], kind: 'discount', rate: 20, cap: 5000, used: 2400, easy: 'exclude', timing: '청구 시 할인' },
         { label: '편의점 10% 할인', cats: ['편의점'], kind: 'discount', rate: 10, cap: 3000, used: 450, easy: 'exclude', timing: '청구 시 할인' }
       ] },
-    { id: 'life', issuer: '예시B카드', name: '예시 생활 할인 신용', type: '신용', color: '#14161A', tierMin: 300000, prevTier: 'unknown', monthSpend: 120000,
+    { id: 'life', issuer: '예시B카드', name: '예시 생활 할인 신용', type: '신용', color: '#2B2F36', tierMin: 300000, prevTier: 'unknown', monthSpend: 120000,
       benefits: [
         { label: '카페 1,000원 할인', cats: ['카페'], kind: 'discount', fixed: 1000, minAmount: 5000, cap: 4000, used: 0, easy: 'include', timing: '결제일 할인' },
         { label: '대형마트 5% 할인', cats: ['대형마트'], kind: 'discount', rate: 5, cap: 10000, used: 0, easy: 'include', timing: '결제일 할인' }
@@ -32,17 +32,17 @@ function initialCards() {
         { label: '기본 1,000원당 1마일', cats: ['*'], kind: 'mile', per: 1000, unit: 1, easy: 'include', timing: '다음 달 적립', excludeOverseas: false },
         { label: '항공 1,000원당 1마일 추가', cats: ['항공'], kind: 'mile', per: 1000, unit: 1, easy: 'include', timing: '다음 달 적립' }
       ] },
-    { id: 'pay', issuer: '예시B카드', name: '예시 간편결제 할인 신용', type: '신용', color: '#6D3FC0', tierMin: 300000, prevTier: 'met', monthSpend: 250000,
+    { id: 'pay', issuer: '예시B카드', name: '예시 간편결제 할인 신용', type: '신용', color: '#6D4BD8', tierMin: 300000, prevTier: 'met', monthSpend: 250000,
       benefits: [
         { label: '간편결제 10% 할인', cats: ['카페', '온라인 쇼핑', '배달앱'], kind: 'discount', rate: 10, cap: 6000, used: 1000, easy: 'only', timing: '청구 시 할인' },
         { label: '편의점 10% 할인', cats: ['편의점'], kind: 'discount', rate: 10, cap: 2000, used: 0, easy: 'include', timing: '청구 시 할인' }
       ] },
-    { id: 'cash', issuer: '예시A카드', name: '예시 캐시백 체크', type: '체크', color: '#B45309', tierMin: 0, prevTier: 'none', monthSpend: 60000,
+    { id: 'cash', issuer: '예시A카드', name: '예시 캐시백 체크', type: '체크', color: '#B7791F', tierMin: 0, prevTier: 'none', monthSpend: 60000,
       benefits: [
         { label: '전 가맹점 0.5% 캐시백', cats: ['*'], kind: 'cashback', rate: 0.5, easy: 'include', timing: '다음 달 지급' },
         { label: '편의점 3% 캐시백', cats: ['편의점'], kind: 'cashback', rate: 3, cap: 2000, used: 0, easy: 'include', timing: '다음 달 지급' }
       ] },
-    { id: 'mall', issuer: '예시C카드', name: '예시 쇼핑몰 제휴 신용', type: '신용', color: '#C2410C', tierMin: 0, prevTier: 'none', monthSpend: 90000,
+    { id: 'mall', issuer: '예시C카드', name: '예시 쇼핑몰 제휴 신용', type: '신용', color: '#D9480F', tierMin: 0, prevTier: 'none', monthSpend: 90000,
       memberLabel: '쇼핑몰 멤버십 회원인가요?', isMember: true,
       benefits: [
         { label: '쿠팡 4% 적립 (멤버십 회원)', brands: ['쿠팡'], kind: 'mpoint', rate: 4, member: true, pointName: '쿠팡캐시', pointPlace: '쿠팡', easy: 'include', timing: '다음 달 적립' },
@@ -50,7 +50,7 @@ function initialCards() {
         { label: '쿠팡이츠 2% 적립', brands: ['쿠팡이츠'], kind: 'mpoint', rate: 2, pointName: '쿠팡캐시', pointPlace: '쿠팡', easy: 'include', timing: '다음 달 적립' },
         { label: '기본 0.5% 포인트', cats: ['*'], kind: 'point', rate: 0.5, easy: 'include', timing: '다음 달 적립' }
       ] },
-    { id: 'pending', issuer: '예시A카드', name: '예시 기본 체크', type: '체크', color: '#9AA1AF', tierMin: 0, prevTier: 'none', monthSpend: 0, status: 'pending', benefits: [] }
+    { id: 'pending', issuer: '예시A카드', name: '예시 기본 체크', type: '체크', color: '#C7CCD3', tierMin: 0, prevTier: 'none', monthSpend: 0, status: 'pending', benefits: [] }
   ];
 }
 
