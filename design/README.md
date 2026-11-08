@@ -48,6 +48,6 @@ claude.ai 디자인 캔버스에서 만든 HTML 목업이다. 화면 구성과 �
 - 더보기: FAQ, 마일 가치, 기본 결제수단, 테스트 상황, 초기화
 - `prototype/engine.js`: 계산 로직(정책 06~09 반영), `prototype/component.js`: 화면 상태 로직. 실제 앱의 규칙 엔진을 만들 때 참고용이며, 테스트 케이스 기반으로 다시 구현한다.
 
-썸네일 시안 비교: `ProtoB.dc.html`(검정 칩 + 카드사 이니셜), `ProtoD.dc.html`(흰 카드 윤곽 + IC칩). 기능은 Proto와 같다.
+썸네일 시안 비교: `ProtoB.dc.html`(검정 칩 + 카드사 이니셜), `ProtoD.dc.html`(흰 카드 윤곽 + IC칩). 기능은 Proto와 같다. `ProtoOriginal.dc.html`은 처음 디자인(파란 포인트, 색 카드 블록) 버전이다.
 
 아직 없는 화면: 관리자 검수 화면(웹), 온보딩·권한 요청.

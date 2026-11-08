@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SCON 프로토타입 원본</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+body{margin:0}
+a{color:#2453FF}a:hover{color:#1A3FCC}
+button{cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F5F6F8; font-family: 'Noto Sans KR', sans-serif; color: #14161A; display: flex; flex-direction: column; position: relative; overflow: hidden">
+<div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column">
+
+<sc-if value="{{is_home}}" hint-placeholder-val="{{ true }}">
+<div style="padding: 52px 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 13px; color: #5B616E">지금 여기서 결제하면</span>
+<span style="font-size: 21px; font-weight: 800">{{merchantName}}</span>
+<span style="font-size: 12px; color: #5B616E">{{merchantMeta}}</span>
+</div>
+<button onClick="{{goPlace}}" style="height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 14px; color: #14161A; flex: none">장소 변경</button>
+</div>
+
+<sc-if value="{{needPick}}" hint-placeholder-val="{{ false }}">
+<div style="border-radius: 18px; background: #FFFFFF; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 16px; font-weight: 700">가까운 가맹점이 여러 개예요</span>
+<span style="font-size: 13px; line-height: 1.5; color: #5B616E">실내라 위치가 정확하지 않을 수 있어서 자동으로 고르지 않았어요. 결제할 곳을 골라주세요.</span>
+<button onClick="{{pickPlace}}" style="height: 48px; border-radius: 14px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 700">가맹점 고르기</button>
+</div>
+</sc-if>
+
+<sc-if value="{{showResult}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label style="display: flex; align-items: center; justify-content: space-between; height: 52px; padding: 0 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #D9DCE3">
+<span style="font-size: 14px; color: #5B616E">결제 금액 <span style="font-size: 12px">(선택)</span></span>
+<input type="text" inputmode="numeric" value="{{amountInput}}" placeholder="{{amountPlaceholder}}" onChange="{{onAmount}}" style="border: 0; text-align: right; font-family: inherit; font-size: 18px; font-weight: 700; width: 150px; background: transparent; color: #14161A">
+</label>
+<div style="display: flex; gap: 8px; align-items: center">
+<sc-for list="{{quick}}" as="q" hint-placeholder-count="3">
+<button onClick="{{q.on}}" style="height: 36px; padding: 0 14px; border-radius: 18px; border: {{q.bd}}; background: {{q.bg}}; color: {{q.fg}}; font-family: inherit; font-size: 13px">{{q.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{usingDefault}}" hint-placeholder-val="{{ true }}">
+<button onClick="{{faqAmount}}" style="text-align: left; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 12px; color: #1A3FCC">{{defaultNote}} ⓘ</button>
+</sc-if>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{payChips}}" as="p" hint-placeholder-count="3">
+<button onClick="{{p.on}}" style="height: 34px; padding: 0 12px; border-radius: 17px; border: {{p.bd}}; background: {{p.bg}}; color: {{p.fg}}; font-weight: {{p.fw}}; font-family: inherit; font-size: 12px">{{p.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{hasBest}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{hasTie}}" hint-placeholder-val="{{ false }}">
+<div style="border-radius: 16px; background: #FFFFFF; border: 1px solid #C9D4FF; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 13px; font-weight: 700">두 카드 이상 혜택이 비슷해요 (100원 이내)</span><button onClick="{{faqTie}}" style="border: 0; background: transparent; font-family: inherit; font-size: 12px; color: #1A3FCC; padding: 4px">기준 보기</button></div>
+<span style="font-size: 12px; color: #33415C">추천 이유: {{tieReason}}</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{tieOptions}}" as="o" hint-placeholder-count="2">
+<button onClick="{{o.on}}" style="display: flex; justify-content: space-between; align-items: center; min-height: 40px; padding: 6px 12px; border-radius: 12px; border: {{o.bd}}; background: {{o.bg}}; font-family: inherit; text-align: left; color: #14161A"><span style="font-size: 12px"><b>[{{o.tag}}]</b> {{o.name}}</span><span style="font-size: 11px; color: #5B616E">{{o.why}}</span></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<div style="border-radius: 20px; background: {{best.color}}; color: #FFFFFF; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 12px; background: rgba(255,255,255,0.22)">이 카드로 결제하세요</span>
+<span style="font-size: 12px">{{best.type}}</span>
+</div>
+<span style="font-size: 15px">{{best.name}}</span>
+<span style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px">{{best.headline}}</span>
+<sc-if value="{{best.hasSub}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px">{{best.sub}}</span></sc-if>
+<div style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{bestLines}}" as="l" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px">{{l.text}}</span><sc-if value="{{l.hasNote}}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px">↳ {{l.note}}</span></sc-if></div>
+</sc-for>
+<sc-if value="{{hasBestCap}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px">{{bestCap}}</span></sc-if>
+<span style="font-size: 12px">지급: {{bestTiming}}</span>
+</div>
+<sc-if value="{{hasMile}}" hint-placeholder-val="{{ false }}">
+<button onClick="{{goSettingsFromHome}}" style="text-align: left; border: 0; background: rgba(255,255,255,0.16); border-radius: 10px; padding: 8px 10px; font-family: inherit; font-size: 11px; line-height: 1.5; color: #FFFFFF">{{mileNote}} <b>[바꾸기]</b></button>
+</sc-if>
+<button onClick="{{recordBest}}" style="height: 48px; border-radius: 14px; border: 0; background: #FFFFFF; color: #14161A; font-family: inherit; font-size: 15px; font-weight: 700">이 카드로 결제했어요</button>
+</div>
+<sc-if value="{{hasTips}}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{bestTips}}" as="t" hint-placeholder-count="1"><span style="font-size: 12px; color: #1A3FCC; padding: 0 4px">팁: {{t.text}}</span></sc-for>
+</sc-if>
+<button onClick="{{faqHow}}" style="align-self: flex-start; border: 0; background: transparent; padding: 4px; font-family: inherit; font-size: 12px; color: #1A3FCC">이 추천은 어떻게 계산되나요?</button>
+</div>
+</sc-if>
+
+<sc-if value="{{noBest}}" hint-placeholder-val="{{ false }}">
+<div style="border-radius: 18px; background: #FFFFFF; padding: 20px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 17px; font-weight: 700">{{noBestText}}</span>
+<span style="font-size: 13px; color: #5B616E">아래에서 카드별 사유를 확인할 수 있어요.</span>
+</div>
+</sc-if>
+
+<span style="font-size: 13px; font-weight: 700; color: #5B616E; padding: 6px 4px 0">다른 내 카드</span>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+<div style="border-radius: 14px; background: #FFFFFF; padding: 12px 14px; display: flex; align-items: center; gap: 10px">
+<span style="width: 8px; height: 32px; border-radius: 4px; background: {{r.color}}; flex: none" aria-hidden="true"></span>
+<div style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 14px; font-weight: 500">{{r.name}}</span>
+<span style="font-size: 11px; color: {{r.rc}}">{{r.reason}}</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none">
+<span style="font-size: 14px; font-weight: 700">{{r.value}}</span>
+<sc-if value="{{r.hasAct}}" hint-placeholder-val="{{ false }}"><button onClick="{{r.onAct}}" style="border: 0; background: transparent; padding: 2px 0; font-family: inherit; font-size: 11px; color: #1A3FCC">{{r.act}}</button></sc-if>
+</div>
+</div>
+</sc-for>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{is_place}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 4px">
+<button onClick="{{goHome}}" aria-label="뒤로" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button>
+<span style="font-size: 20px; font-weight: 800">어디서 결제하나요?</span>
+</div>
+<sc-if value="{{needPickBanner}}" hint-placeholder-val="{{ false }}"><div style="border-radius: 12px; background: #FFF4E5; padding: 10px 12px; font-size: 12px; color: #6B3A00">가까운 후보가 여러 개라 자동으로 고르지 않았어요.</div></sc-if>
+<label style="display: flex; align-items: center; height: 48px; padding: 0 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #D9DCE3">
+<input type="text" value="{{placeQuery}}" onChange="{{onQuery}}" placeholder="가맹점 검색 (예: 쿠팡, 스타벅스)" aria-label="가맹점 검색" style="border: 0; flex: 1; font-family: inherit; font-size: 15px; background: transparent; color: #14161A">
+</label>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{catChips}}" as="c" hint-placeholder-count="6"><button onClick="{{c.on}}" style="height: 36px; padding: 0 12px; border-radius: 18px; border: {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 13px">{{c.label}}</button></sc-for>
+</div>
+<sc-if value="{{hasNearby}}" hint-placeholder-val="{{ true }}">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">지금 위치 근처</span>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<sc-for list="{{nearby}}" as="n" hint-placeholder-count="3">
+<button onClick="{{n.on}}" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 0; border-bottom: 1px solid #EEF0F4; background: transparent; font-family: inherit; text-align: left; color: #14161A"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 500">{{n.name}}</span><span style="font-size: 12px; color: #5B616E">{{n.meta}}</span></span><sc-if value="{{n.hasSel}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 700; color: #1A3FCC">{{n.selTag}}</span></sc-if></button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{hasOnline}}" hint-placeholder-val="{{ true }}">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">온라인 (위치와 관계없이 검색·업종으로 선택)</span>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<sc-for list="{{onlineList}}" as="n" hint-placeholder-count="2">
+<button onClick="{{n.on}}" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 0; border-bottom: 1px solid #EEF0F4; background: transparent; font-family: inherit; text-align: left; color: #14161A"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 500">{{n.name}}</span><span style="font-size: 12px; color: #5B616E">{{n.meta}}</span></span><sc-if value="{{n.hasSel}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; font-weight: 700; color: #1A3FCC">{{n.selTag}}</span></sc-if></button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{hasTest}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">테스트용 상황</span>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<sc-for list="{{testList}}" as="n" hint-placeholder-count="1">
+<button onClick="{{n.on}}" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border: 0; background: transparent; font-family: inherit; text-align: left; color: #14161A"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 500">{{n.name}}</span><span style="font-size: 12px; color: #5B616E">{{n.meta}}</span></span></button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{is_record}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; background: #6B6F78; display: flex; flex-direction: column; justify-content: flex-end; min-height: 844px">
+<div style="background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 16px 20px 32px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 20px; font-weight: 800">결제 기록하기</span><button onClick="{{cancelDraft}}" style="border: 0; background: transparent; font-family: inherit; font-size: 14px; color: #5B616E; padding: 10px 4px">닫기</button></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #5B616E">장소</span><span style="font-weight: 500">{{merchantName}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700">결제한 카드</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{draftCardChips}}" as="c" hint-placeholder-count="3"><button onClick="{{c.on}}" style="height: 32px; padding: 0 10px; border-radius: 16px; border: {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 12px">{{c.label}}</button></sc-for></div></div>
+<label style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700">실제 결제 금액 (필수)</span>
+<input type="text" inputmode="numeric" value="{{draftAmount}}" onChange="{{onDraftAmount}}" placeholder="금액 입력" style="height: 52px; padding: 0 14px; border-radius: 12px; border: 2px solid #2453FF; font-family: inherit; font-size: 20px; font-weight: 700; color: #14161A; box-sizing: border-box">
+<span style="font-size: 11px; color: #5B616E">추천 때 금액이 미리 들어가요. 영수증과 다르면 고쳐주세요.</span></label>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700">결제수단</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{draftPayChips}}" as="p" hint-placeholder-count="3"><button onClick="{{p.on}}" style="height: 32px; padding: 0 10px; border-radius: 16px; border: {{p.bd}}; background: {{p.bg}}; color: {{p.fg}}; font-family: inherit; font-size: 12px">{{p.label}}</button></sc-for></div></div>
+<div style="border-radius: 14px; background: #F5F6F8; padding: 14px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #5B616E">예상 혜택</span><span style="font-weight: 800; color: #1A3FCC">{{draftBenefit}}</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 12px"><span style="color: #5B616E">이번 달 사용액</span><span>{{draftSpend}}</span></div>
+<sc-if value="{{hasDraftCap}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px">{{draftCap}}</span></sc-if>
+</div>
+<button onClick="{{doRecord}}" style="height: 52px; border-radius: 16px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700">기록하기</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{is_recorded}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 90px 20px 24px; display: flex; flex-direction: column; gap: 18px; flex: 1">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+<div style="width: 64px; height: 64px; border-radius: 32px; background: #E7F6EE; display: flex; align-items: center; justify-content: center; font-size: 30px; color: #0B6B44" aria-hidden="true">✓</div>
+<span style="font-size: 22px; font-weight: 800">기록했어요</span>
+<span style="font-size: 14px; color: #5B616E">{{lastTitle}}</span>
+<span style="font-size: 15px; font-weight: 700; color: #1A3FCC">{{lastBenefit}}</span>
+</div>
+<div style="border-radius: 16px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; color: #5B616E">{{lastSpend}}</span><div style="height: 8px; border-radius: 4px; background: #E4E6EB"><div style="width: {{lastSpendPct}}%; height: 8px; border-radius: 4px; background: #2453FF"></div></div></div>
+<sc-if value="{{hasLastCap}}" hint-placeholder-val="{{ false }}"><div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; color: #5B616E">{{lastCap}}</span><div style="height: 8px; border-radius: 4px; background: #E4E6EB"><div style="width: {{lastCapPct}}%; height: 8px; border-radius: 4px; background: #2453FF"></div></div></div></sc-if>
+</div>
+<div style="border-radius: 14px; background: #E8EDFF; padding: 12px 14px; font-size: 12px; line-height: 1.5; color: #1E2A55">청구서가 나오면 실제 할인과 맞는지 확인을 요청드릴게요. 이번 달 탭 > 청구서 대조에서 미리 볼 수 있어요.</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px">
+<button onClick="{{goHome}}" style="height: 52px; border-radius: 16px; border: 0; background: #14161A; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700">확인</button>
+<button onClick="{{undoLast}}" style="height: 44px; border: 0; background: transparent; font-family: inherit; font-size: 14px; color: #5B616E">잘못 눌렀어요, 되돌리기</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{is_cards}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 52px 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 26px; font-weight: 800">내 카드</span><button onClick="{{goAdd}}" style="height: 44px; padding: 0 16px; border-radius: 22px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 700">카드 추가</button></div>
+<span style="font-size: 12px; color: #5B616E">모든 카드와 혜택은 테스트용 예시 데이터예요.</span>
+<sc-for list="{{myCards}}" as="c" hint-placeholder-count="4">
+<button onClick="{{c.on}}" style="border-radius: 16px; background: #FFFFFF; padding: 14px; display: flex; gap: 12px; align-items: center; border: {{c.bd}}; font-family: inherit; text-align: left; color: #14161A">
+<span style="width: 48px; height: 32px; border-radius: 6px; background: {{c.color}}; flex: none" aria-hidden="true"></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700">{{c.name}}</span><span style="font-size: 11px; color: #5B616E">{{c.sub}}</span></span>
+<span style="font-size: 11px; padding: 4px 8px; border-radius: 10px; background: {{c.bbg}}; color: {{c.bfg}}; font-weight: 500; flex: none">{{c.badge}}</span>
+</button>
+</sc-for>
+<button onClick="{{goRequest}}" style="border-radius: 14px; background: #E8EDFF; padding: 14px; border: 0; font-family: inherit; text-align: left; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; font-weight: 700; color: #1A3FCC">내 카드가 목록에 없나요?</span><span style="font-size: 12px; color: #33415C">요청하면 검수 후 계산을 시작하고 알려드려요.</span></button>
+</div>
+</sc-if>
+
+<sc-if value="{{is_add}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 4px"><button onClick="{{goCards}}" aria-label="뒤로" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button><span style="font-size: 20px; font-weight: 800">카드 추가</span></div>
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">1. 카드사</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{issuerChips}}" as="i" hint-placeholder-count="3"><button onClick="{{i.on}}" style="height: 40px; padding: 0 14px; border-radius: 12px; border: {{i.bd}}; background: {{i.bg}}; color: {{i.fg}}; font-family: inherit; font-size: 13px">{{i.label}}</button></sc-for></div>
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">2. 카드 선택 (검증된 카드)</span>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<sc-for list="{{addList}}" as="a" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #EEF0F4">
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1"><span style="font-size: 14px; font-weight: 700">{{a.name}}</span><span style="font-size: 11px; color: #5B616E">{{a.sub}}</span></span>
+<sc-if value="{{a.isOwned}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #5B616E">추가됨</span></sc-if>
+<sc-if value="{{a.notOwned}}" hint-placeholder-val="{{ true }}"><button onClick="{{a.on}}" style="height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700">추가</button></sc-if>
+</div>
+</sc-for>
+</div>
+<button onClick="{{goRequest}}" style="height: 50px; border-radius: 14px; border: 1px dashed #9AA1AF; background: transparent; font-family: inherit; font-size: 14px; color: #14161A">찾는 카드가 없어요</button>
+</div>
+</sc-if>
+
+<sc-if value="{{is_addTier}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; background: #6B6F78; display: flex; flex-direction: column; justify-content: flex-end; min-height: 844px">
+<div style="background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 18px 20px 32px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 19px; font-weight: 800">{{pickName}}</span><button onClick="{{goAdd}}" style="border: 0; background: transparent; font-family: inherit; font-size: 14px; color: #5B616E; padding: 10px 4px">닫기</button></div>
+<sc-if value="{{pickHasTier}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; font-weight: 700">지난달 이 카드로 얼마 썼나요?</span><span style="font-size: 12px; color: #5B616E">실적에 따라 이번 달 혜택이 달라져요. 대략적인 구간이면 충분해요.</span>
+<sc-for list="{{tierOpts}}" as="o" hint-placeholder-count="3"><button onClick="{{o.on}}" style="height: 46px; padding: 0 14px; border-radius: 12px; border: {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 14px; text-align: left">{{o.label}}</button></sc-for>
+<button onClick="{{faqTier}}" style="align-self: flex-start; border: 0; background: transparent; padding: 2px; font-family: inherit; font-size: 12px; color: #1A3FCC">왜 물어보나요?</button></div>
+</sc-if>
+<sc-if value="{{pickHasMember}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; font-weight: 700">{{pickMemberQ}}</span><div style="display: flex; gap: 8px"><sc-for list="{{memberOpts}}" as="o" hint-placeholder-count="2"><button onClick="{{o.on}}" style="flex: 1; height: 44px; border-radius: 12px; border: {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 14px">{{o.label}}</button></sc-for></div></div>
+</sc-if>
+<sc-if value="{{pickHasCap}}" hint-placeholder-val="{{ false }}">
+<label style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; font-weight: 700">이번 달 이미 받은 혜택 (선택)</span><input type="text" inputmode="numeric" value="{{addUsed}}" onChange="{{onAddUsed}}" placeholder="예: 1,000" style="height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #D9DCE3; font-family: inherit; font-size: 16px; box-sizing: border-box; color: #14161A"><button onClick="{{faqLimit}}" style="align-self: flex-start; border: 0; background: transparent; padding: 2px; font-family: inherit; font-size: 12px; color: #1A3FCC">모르면 비워두세요 · 자세히</button></label>
+</sc-if>
+<button onClick="{{confirmAdd}}" style="height: 52px; border-radius: 16px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700">카드 등록하기</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{is_request}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 4px"><button onClick="{{goCards}}" aria-label="뒤로" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button><span style="font-size: 20px; font-weight: 800">찾는 카드 요청하기</span></div>
+<label style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; color: #5B616E">카드 이름 (카드 앞면이나 카드사 앱에 적힌 이름)</span><input type="text" value="{{reqName}}" onChange="{{onReqName}}" placeholder="예: ○○카드 기본 체크" style="height: 50px; padding: 0 14px; border-radius: 12px; border: 1px solid #D9DCE3; font-family: inherit; font-size: 15px; box-sizing: border-box; color: #14161A"></label>
+<div style="display: flex; gap: 8px"><sc-for list="{{reqTypeChips}}" as="t" hint-placeholder-count="2"><button onClick="{{t.on}}" style="flex: 1; height: 44px; border-radius: 12px; border: {{t.bd}}; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 14px">{{t.label}}</button></sc-for></div>
+<div style="border-radius: 14px; background: #FFFFFF; padding: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.5; color: #33415C">
+<span style="font-weight: 700; color: #14161A">요청하면 이렇게 진행돼요</span>
+<span>1. 내 카드에 바로 등록돼요. 추천에는 “계산 불가”로 보여요.</span>
+<span>2. 상품설명서로 혜택을 정리하고 사람이 검수해요.</span>
+<span>3. 검수가 끝나면 알림을 보내고 추천에 포함해요.</span>
+</div>
+<button onClick="{{submitReq}}" style="height: 52px; border-radius: 16px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700">요청하고 내 카드에 등록</button>
+</div>
+</sc-if>
+
+<sc-if value="{{is_detail}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; justify-content: space-between"><button onClick="{{detailBack}}" aria-label="뒤로" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button><button onClick="{{goVerify}}" style="border: 0; background: transparent; font-family: inherit; font-size: 13px; color: #1A3FCC; padding: 8px">정보가 달라요</button></div>
+<div style="display: flex; gap: 12px; align-items: center"><span style="width: 72px; height: 46px; border-radius: 8px; background: {{dColor}}; flex: none" aria-hidden="true"></span><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 19px; font-weight: 800">{{dName}}</span><span style="font-size: 12px; color: #5B616E">{{dType}} · 검증됨 (예시 데이터)</span></div></div>
+<sc-if value="{{dJustAdded}}" hint-placeholder-val="{{ false }}"><div style="border-radius: 12px; background: #FFF4E5; padding: 10px 12px; font-size: 12px; color: #6B3A00">이번 달에 등록한 카드예요. 등록 전 사용분은 반영되지 않았어요.</div></sc-if>
+<sc-if value="{{dHasTier}}" hint-placeholder-val="{{ true }}">
+<div style="border-radius: 16px; background: #FFFFFF; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between"><span style="font-size: 14px; font-weight: 700">지난달 실적 구간</span><button onClick="{{faqTier}}" style="border: 0; background: transparent; font-family: inherit; font-size: 12px; color: #1A3FCC; padding: 0">ⓘ</button></div>
+<div style="display: flex; gap: 6px"><sc-for list="{{dTierOpts}}" as="o" hint-placeholder-count="3"><button onClick="{{o.on}}" style="flex: 1; height: 38px; border-radius: 10px; border: {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 12px">{{o.label}}</button></sc-for></div>
+<span style="font-size: 12px; color: #5B616E">{{dSpend}}</span>
+</div>
+</sc-if>
+<sc-if value="{{dHasMember}}" hint-placeholder-val="{{ false }}">
+<div style="border-radius: 16px; background: #FFFFFF; padding: 14px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 14px; font-weight: 700">{{dMemberQ}}</span><div style="display: flex; gap: 6px"><sc-for list="{{dMemberOpts}}" as="o" hint-placeholder-count="2"><button onClick="{{o.on}}" style="flex: 1; height: 38px; border-radius: 10px; border: {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 12px">{{o.label}}</button></sc-for></div></div>
+</sc-if>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px"><span style="font-size: 13px; font-weight: 700; color: #5B616E">혜택과 이번 달 사용</span><sc-if value="{{dHasCaps}}" hint-placeholder-val="{{ true }}"><button onClick="{{toggleEdit}}" style="border: 0; background: transparent; font-family: inherit; font-size: 12px; color: #1A3FCC; padding: 4px">{{editLabel}}</button></sc-if></div>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<sc-for list="{{dBenefits}}" as="b" hint-placeholder-count="2">
+<div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #EEF0F4">
+<span style="font-size: 14px; font-weight: 700">{{b.label}}</span>
+<span style="font-size: 11px; color: #5B616E">{{b.cond}}</span>
+<sc-if value="{{b.hasCap}}" hint-placeholder-val="{{ true }}"><div style="height: 6px; border-radius: 3px; background: #E4E6EB"><div style="width: {{b.pct}}%; height: 6px; border-radius: 3px; background: #2453FF"></div></div><span style="font-size: 11px; color: #5B616E">{{b.capText}}</span></sc-if>
+<sc-if value="{{b.showEdit}}" hint-placeholder-val="{{ false }}"><label style="display: flex; align-items: center; gap: 8px; font-size: 12px">이번 달 사용액 <input type="text" inputmode="numeric" value="{{b.used}}" onChange="{{b.onUsed}}" style="height: 36px; width: 110px; padding: 0 10px; border-radius: 8px; border: 1px solid #2453FF; font-family: inherit; font-size: 14px; color: #14161A"> 원</label></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{is_status}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 52px 20px 24px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; color: #5B616E">11월 · 기록 기준 예상</span>
+<span style="font-size: 23px; font-weight: 800">이번 달 받을 혜택 {{monthTotal}}원</span>
+<button onClick="{{goVerify}}" style="border-radius: 14px; background: #14161A; padding: 14px; border: 0; font-family: inherit; text-align: left; display: flex; justify-content: space-between; align-items: center"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 700; color: #FFFFFF">청구서와 대조하기</span><span style="font-size: 12px; color: #C9CEDA">확인할 기록 {{pendingVerify}}건</span></span><span style="font-size: 13px; font-weight: 700; color: #8FA6FF">대조</span></button>
+<button onClick="{{goMonthCheck}}" style="border-radius: 14px; background: #FFFFFF; padding: 14px; border: 1px solid #D9DCE3; font-family: inherit; text-align: left; display: flex; justify-content: space-between; align-items: center; color: #14161A"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 700">매월 1일 실적 확인</span><span style="font-size: 12px; color: #5B616E">지난달 실적 구간을 원탭으로 확인</span></span><span style="font-size: 13px; color: #1A3FCC">열기</span></button>
+<sc-for list="{{statusCards}}" as="c" hint-placeholder-count="3">
+<div style="border-radius: 16px; background: #FFFFFF; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 14px; font-weight: 700">{{c.name}}</span><span style="font-size: 11px; font-weight: 500; color: {{c.badgeColor}}">{{c.badge}}</span></div>
+<sc-if value="{{c.hasTier}}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 11px; color: #5B616E"><span>이번 달 실적 (기록으로 추정)</span><span>{{c.tierText}}</span></div><div style="height: 7px; border-radius: 4px; background: #E4E6EB"><div style="width: {{c.tierPct}}%; height: 7px; border-radius: 4px; background: {{c.barColor}}"></div></div></div></sc-if>
+<sc-for list="{{c.caps}}" as="k" hint-placeholder-count="1"><div style="display: flex; flex-direction: column; gap: 5px"><div style="display: flex; justify-content: space-between; font-size: 11px; color: #5B616E"><span>{{k.label}} 한도</span><span>{{k.text}}</span></div><div style="height: 7px; border-radius: 4px; background: #E4E6EB"><div style="width: {{k.pct}}%; height: 7px; border-radius: 4px; background: #2453FF"></div></div></div></sc-for>
+</div>
+</sc-for>
+<span style="font-size: 13px; font-weight: 700; color: #5B616E; padding-top: 4px">이번 달 기록</span>
+<sc-if value="{{noCurRecords}}" hint-placeholder-val="{{ true }}"><span style="font-size: 12px; color: #5B616E">추천 화면에서 “이 카드로 결제했어요”를 누르면 여기에 쌓여요.</span></sc-if>
+<sc-for list="{{curRecords}}" as="r" hint-placeholder-count="1">
+<div style="border-radius: 14px; background: #FFFFFF; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 500">{{r.text}}</span><span style="font-size: 11px; color: #5B616E">{{r.amount}}</span></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="font-size: 13px; font-weight: 700; color: {{r.vc}}">{{r.value}}</span><sc-if value="{{r.canCancel}}" hint-placeholder-val="{{ true }}"><button onClick="{{r.on}}" style="border: 0; background: transparent; font-family: inherit; font-size: 11px; color: #5B616E; padding: 2px 0">취소됨으로 바꾸기</button></sc-if></span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{is_verify}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 4px"><button onClick="{{goStatus}}" aria-label="뒤로" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button><span style="font-size: 20px; font-weight: 800">청구서 대조하기</span></div>
+<span style="font-size: 12px; line-height: 1.5; color: #5B616E">카드사 앱이나 명세서의 실제 할인과 비교해 주세요.</span>
+<div style="border-radius: 16px; background: #FFFFFF; padding: 16px; display: flex; align-items: center; justify-content: space-between"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #5B616E">계산 정확도</span><span style="font-size: 28px; font-weight: 800">{{accuracy}}</span><span style="font-size: 11px; color: #5B616E">{{accuracyText}}</span></span><button onClick="{{faqVerify}}" style="border: 0; background: transparent; font-family: inherit; font-size: 12px; color: #1A3FCC; padding: 4px">어떻게 쓰이나요?</button></div>
+<sc-for list="{{verifyList}}" as="r" hint-placeholder-count="3">
+<div style="border-radius: 14px; background: #FFFFFF; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; gap: 8px"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 700">{{r.title}}</span><span style="font-size: 11px; color: #5B616E">{{r.meta}}</span></span><span style="font-size: 13px; font-weight: 700; flex: none">{{r.expected}}</span></div>
+<sc-if value="{{r.pendingV}}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 8px"><button onClick="{{r.onOk}}" style="flex: 1; height: 38px; border-radius: 10px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">맞아요</button><button onClick="{{r.onDiff}}" style="flex: 1; height: 38px; border-radius: 10px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">달라요</button></div></sc-if>
+<sc-if value="{{r.isOk}}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; font-size: 11px; font-weight: 700; color: #0B6B44; padding: 3px 8px; border-radius: 10px; background: #E7F6EE">일치</span></sc-if>
+<sc-if value="{{r.isDiff}}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; color: #8A3B00">{{r.diffText}}</span></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{is_report}}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; background: #6B6F78; display: flex; flex-direction: column; justify-content: flex-end; min-height: 844px">
+<div style="background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 18px 20px 32px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 20px; font-weight: 800">실제와 달라요</span><button onClick="{{goVerify}}" style="border: 0; background: transparent; font-family: inherit; font-size: 14px; color: #5B616E; padding: 10px 4px">닫기</button></div>
+<div style="border-radius: 12px; background: #F5F6F8; padding: 12px; display: flex; justify-content: space-between; font-size: 12px"><span>{{rTitle}}</span><span style="font-weight: 700">{{rExpected}}</span></div>
+<label style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; font-weight: 700">실제로 받은 혜택 (원)</span><input type="text" inputmode="numeric" value="{{rActual}}" onChange="{{onRActual}}" placeholder="예: 0" style="height: 50px; padding: 0 14px; border-radius: 12px; border: 2px solid #2453FF; font-family: inherit; font-size: 18px; font-weight: 700; box-sizing: border-box; color: #14161A"></label>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; font-weight: 700">어떻게 달랐나요?</span><div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{reasonChips}}" as="c" hint-placeholder-count="4"><button onClick="{{c.on}}" style="height: 36px; padding: 0 12px; border-radius: 18px; border: {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 12px">{{c.label}}</button></sc-for></div></div>
+<button onClick="{{submitReport}}" style="height: 52px; border-radius: 16px; border: 0; background: #2453FF; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700">신고하기</button>
+<span style="font-size: 11px; color: #5B616E; text-align: center">관리자가 상품설명서와 다시 대조하고, 데이터가 고쳐지면 알려드려요.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{is_monthCheck}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 4px"><button onClick="{{goStatus}}" aria-label="뒤로" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button><span style="font-size: 20px; font-weight: 800">11월 실적 확인</span></div>
+<span style="font-size: 12px; line-height: 1.5; color: #5B616E">10월 기록으로 추정한 실적이에요. 기록하지 않은 결제나 실적에서 빠지는 결제가 있으면 달라질 수 있어요.</span>
+<sc-for list="{{checkCards}}" as="c" hint-placeholder-count="2">
+<div style="border-radius: 16px; background: #FFFFFF; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between"><span style="font-size: 14px; font-weight: 700">{{c.name}}</span></div>
+<span style="font-size: 12px; color: #5B616E">{{c.est}}</span>
+<div style="display: flex; gap: 6px"><sc-for list="{{c.opts}}" as="o" hint-placeholder-count="3"><button onClick="{{o.on}}" style="flex: 1; height: 38px; border-radius: 10px; border: {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 12px">{{o.label}}</button></sc-for></div>
+</div>
+</sc-for>
+<button onClick="{{doneCheck}}" style="height: 52px; border-radius: 16px; border: 0; background: #14161A; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 700">확인 완료</button>
+</div>
+</sc-if>
+
+<sc-if value="{{is_more}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 52px 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-size: 26px; font-weight: 800">더보기</span>
+<button onClick="{{goFaqList}}" style="border-radius: 16px; background: #2453FF; padding: 16px; border: 0; font-family: inherit; text-align: left; display: flex; justify-content: space-between; align-items: center"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700; color: #FFFFFF">자주 묻는 질문</span><span style="font-size: 12px; color: #DCE4FF">추천 계산, 실적, 기록, 개인정보</span></span><span style="font-size: 20px; color: #FFFFFF">›</span></button>
+<div style="border-radius: 16px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 700">마일리지 1마일의 가치</span>
+<span style="font-size: 12px; color: #5B616E">항공권에 쓰면 가치가 높고, 쇼핑에 쓰면 낮아요.</span>
+<div style="display: flex; gap: 6px"><sc-for list="{{mileChips}}" as="c" hint-placeholder-count="3"><button onClick="{{c.on}}" style="flex: 1; height: 40px; border-radius: 10px; border: {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 13px">{{c.label}}</button></sc-for></div>
+</div>
+<div style="border-radius: 16px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 700">주로 쓰는 결제수단</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{defPayChips}}" as="c" hint-placeholder-count="3"><button onClick="{{c.on}}" style="height: 38px; padding: 0 12px; border-radius: 10px; border: {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 12px">{{c.label}}</button></sc-for></div>
+</div>
+<div style="border-radius: 16px; background: #FFF8EC; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 700">테스트용 · 위치 상황 바꾸기</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{confChips}}" as="c" hint-placeholder-count="2"><button onClick="{{c.on}}" style="height: 38px; padding: 0 12px; border-radius: 10px; border: {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 12px">{{c.label}}</button></sc-for></div>
+<button onClick="{{resetAll}}" style="height: 40px; border-radius: 10px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">프로토타입 처음 상태로</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{is_faq}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 4px"><button onClick="{{faqBack}}" aria-label="{{faqBackLabel}}" style="width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; color: #14161A">‹</button><span style="font-size: 20px; font-weight: 800">자주 묻는 질문</span></div>
+<sc-if value="{{hasFocus}}" hint-placeholder-val="{{ false }}">
+<div style="border-radius: 16px; background: #E8EDFF; padding: 16px; display: flex; flex-direction: column; gap: 8px"><span style="font-size: 11px; font-weight: 700; color: #1A3FCC">지금 궁금한 질문</span><span style="font-size: 15px; font-weight: 700">{{focusQ}}</span><span style="font-size: 13px; line-height: 1.6; color: #33415C">{{focusA}}</span></div>
+</sc-if>
+<sc-for list="{{faqCats}}" as="g" hint-placeholder-count="2">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E; padding: 6px 4px 0">{{g.cat}}</span>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+<div style="border-bottom: 1px solid #EEF0F4">
+<button onClick="{{it.on}}" style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 14px 16px; border: 0; background: transparent; font-family: inherit; text-align: left; color: #14161A"><span style="font-size: 14px; font-weight: 500">{{it.q}}</span><span style="font-size: 18px; color: #5B616E">{{it.sign}}</span></button>
+<sc-if value="{{it.open}}" hint-placeholder-val="{{ false }}"><div style="padding: 0 16px 14px; font-size: 13px; line-height: 1.6; color: #33415C">{{it.a}}</div></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{ true }}">
+<div style="height: 80px; flex: none; background: #FFFFFF; border-top: 1px solid #E4E6EB; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 8px">
+<button onClick="{{goHome}}" style="min-width: 64px; height: 48px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 700; color: {{tabHome}}">추천</button>
+<button onClick="{{goCards}}" style="min-width: 64px; height: 48px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 700; color: {{tabCards}}">내 카드</button>
+<button onClick="{{goStatus}}" style="min-width: 64px; height: 48px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 700; color: {{tabStatus}}">이번 달</button>
+<button onClick="{{goMore}}" style="min-width: 64px; height: 48px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 700; color: {{tabMore}}">더보기</button>
+</div>
+</sc-if>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 20px; right: 20px; bottom: 100px; border-radius: 14px; background: #14161A; color: #FFFFFF; padding: 12px 16px; font-size: 13px; text-align: center">{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+var PAYS = [
+  { id: 'card', name: '실물·터치 결제' },
+  { id: 'naver', name: '네이버페이' },
+  { id: 'kakao', name: '카카오페이' }
+];
+function payName(id) { for (var i = 0; i < PAYS.length; i++) if (PAYS[i].id === id) return PAYS[i].name; return id; }
+
+var MERCHANTS = [
+  { id: 'starbucks', name: '스타벅스 강남역점', cat: '카페', dist: '120m', online: false, defAmount: 6000 },
+  { id: 'gs25', name: 'GS25 강남역점', cat: '편의점', dist: '80m', online: false, defAmount: 5000 },
+  { id: 'emart', name: '이마트 역삼점', cat: '대형마트', dist: '650m', online: false, defAmount: 50000 },
+  { id: 'coupang', name: '쿠팡', brand: '쿠팡', cat: '온라인 쇼핑', online: true, defAmount: 30000, route: '쿠팡 앱 카드결제' },
+  { id: 'eats', name: '쿠팡이츠', brand: '쿠팡이츠', cat: '배달앱', online: true, defAmount: 20000, route: '쿠팡이츠 앱 카드결제' },
+  { id: 'kal', name: '대한항공 항공권', cat: '항공', online: true, defAmount: 300000, route: '항공사 홈페이지 결제' },
+  { id: 'overseas', name: '해외 가맹점 (예: 도쿄 편의점)', cat: '해외', online: false, overseas: true, dist: '해외', defAmount: 10000 }
+];
+
+function initialCards() {
+  return [
+    { id: 'cafe', issuer: '예시A카드', name: '예시 카페 특화 체크', type: '체크', color: '#2453FF', tierMin: 300000, prevTier: 'met', monthSpend: 326000,
+      benefits: [
+        { label: '카페 20% 할인', cats: ['카페'], kind: 'discount', rate: 20, cap: 5000, used: 2400, easy: 'exclude', timing: '청구 시 할인' },
+        { label: '편의점 10% 할인', cats: ['편의점'], kind: 'discount', rate: 10, cap: 3000, used: 450, easy: 'exclude', timing: '청구 시 할인' }
+      ] },
+    { id: 'life', issuer: '예시B카드', name: '예시 생활 할인 신용', type: '신용', color: '#14161A', tierMin: 300000, prevTier: 'unknown', monthSpend: 120000,
+      benefits: [
+        { label: '카페 1,000원 할인', cats: ['카페'], kind: 'discount', fixed: 1000, minAmount: 5000, cap: 4000, used: 0, easy: 'include', timing: '결제일 할인' },
+        { label: '대형마트 5% 할인', cats: ['대형마트'], kind: 'discount', rate: 5, cap: 10000, used: 0, easy: 'include', timing: '결제일 할인' }
+      ] },
+    { id: 'mile', issuer: '예시C카드', name: '예시 항공 마일 신용', type: '신용', color: '#0E7C66', tierMin: 0, prevTier: 'none', monthSpend: 80000,
+      benefits: [
+        { label: '기본 1,000원당 1마일', cats: ['*'], kind: 'mile', per: 1000, unit: 1, easy: 'include', timing: '다음 달 적립', excludeOverseas: false },
+        { label: '항공 1,000원당 1마일 추가', cats: ['항공'], kind: 'mile', per: 1000, unit: 1, easy: 'include', timing: '다음 달 적립' }
+      ] },
+    { id: 'pay', issuer: '예시B카드', name: '예시 간편결제 할인 신용', type: '신용', color: '#6D3FC0', tierMin: 300000, prevTier: 'met', monthSpend: 250000,
+      benefits: [
+        { label: '간편결제 10% 할인', cats: ['카페', '온라인 쇼핑', '배달앱'], kind: 'discount', rate: 10, cap: 6000, used: 1000, easy: 'only', timing: '청구 시 할인' },
+        { label: '편의점 10% 할인', cats: ['편의점'], kind: 'discount', rate: 10, cap: 2000, used: 0, easy: 'include', timing: '청구 시 할인' }
+      ] },
+    { id: 'cash', issuer: '예시A카드', name: '예시 캐시백 체크', type: '체크', color: '#B45309', tierMin: 0, prevTier: 'none', monthSpend: 60000,
+      benefits: [
+        { label: '전 가맹점 0.5% 캐시백', cats: ['*'], kind: 'cashback', rate: 0.5, easy: 'include', timing: '다음 달 지급' },
+        { label: '편의점 3% 캐시백', cats: ['편의점'], kind: 'cashback', rate: 3, cap: 2000, used: 0, easy: 'include', timing: '다음 달 지급' }
+      ] },
+    { id: 'mall', issuer: '예시C카드', name: '예시 쇼핑몰 제휴 신용', type: '신용', color: '#C2410C', tierMin: 0, prevTier: 'none', monthSpend: 90000,
+      memberLabel: '쇼핑몰 멤버십 회원인가요?', isMember: true,
+      benefits: [
+        { label: '쿠팡 4% 적립 (멤버십 회원)', brands: ['쿠팡'], kind: 'mpoint', rate: 4, member: true, pointName: '쿠팡캐시', pointPlace: '쿠팡', easy: 'include', timing: '다음 달 적립' },
+        { label: '쿠팡 2% 적립 (비회원)', brands: ['쿠팡'], kind: 'mpoint', rate: 2, member: false, pointName: '쿠팡캐시', pointPlace: '쿠팡', easy: 'include', timing: '다음 달 적립' },
+        { label: '쿠팡이츠 2% 적립', brands: ['쿠팡이츠'], kind: 'mpoint', rate: 2, pointName: '쿠팡캐시', pointPlace: '쿠팡', easy: 'include', timing: '다음 달 적립' },
+        { label: '기본 0.5% 포인트', cats: ['*'], kind: 'point', rate: 0.5, easy: 'include', timing: '다음 달 적립' }
+      ] },
+    { id: 'pending', issuer: '예시A카드', name: '예시 기본 체크', type: '체크', color: '#9AA1AF', tierMin: 0, prevTier: 'none', monthSpend: 0, status: 'pending', benefits: [] }
+  ];
+}
+
+var CATALOG = [
+  { id: 'transit', issuer: '예시A카드', name: '예시 대중교통 체크', type: '체크', color: '#0369A1', tierMin: 200000,
+    benefits: [ { label: '대중교통 10% 할인', cats: ['대중교통'], kind: 'discount', rate: 10, cap: 3000, used: 0, easy: 'include', timing: '청구 시 할인' } ] },
+  { id: 'flat', issuer: '예시B카드', name: '예시 무실적 적립 신용', type: '신용', color: '#475569', tierMin: 0,
+    benefits: [ { label: '전 가맹점 1% 포인트', cats: ['*'], kind: 'point', rate: 1, easy: 'include', timing: '다음 달 적립' } ] },
+  { id: 'mall2', issuer: '예시C카드', name: '예시 쇼핑몰 제휴 체크', type: '체크', color: '#9A3412', tierMin: 0, memberLabel: '쇼핑몰 멤버십 회원인가요?',
+    benefits: [ { label: '쿠팡 2% 적립 (멤버십 회원)', brands: ['쿠팡'], kind: 'mpoint', rate: 2, member: true, pointName: '쿠팡캐시', pointPlace: '쿠팡', easy: 'include', timing: '다음 달 적립' } ] }
+];
+
+function fmt(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+function applies(b, card, m) {
+  if (b.member === true && !card.isMember) return false;
+  if (b.member === false && card.isMember) return false;
+  if (b.brands) return !!m.brand && b.brands.indexOf(m.brand) >= 0;
+  if (b.cats) return b.cats.indexOf(m.cat) >= 0 || b.cats.indexOf('*') >= 0;
+  return false;
+}
+
+function remainingCap(b) { return b.cap ? Math.max(0, b.cap - (b.used || 0)) : null; }
+
+// 카드 하나의 계산 결과
+function computeCard(card, m, amount, pay, mileValue) {
+  var r = { card: card, value: 0, maxValue: 0, parts: [], notes: [], tips: [], status: 'ok', reason: '', conditional: false, headline: '', sub: '' };
+  if (card.status === 'pending') { r.status = 'na'; r.reason = '혜택 정보 준비 중 (검수 대기)'; return r; }
+  if (m.overseas) { r.status = 'na'; r.reason = '해외 결제는 아직 계산하지 않아요'; return r; }
+  var list = card.benefits.filter(function (b) { return applies(b, card, m); });
+  if (!list.length) { r.status = 'zero'; r.reason = '이 가맹점은 혜택 대상이 아니에요'; return r; }
+  var isEasy = pay !== 'card';
+  var total = 0, kinds = {};
+  list.forEach(function (b) {
+    var p = { label: b.label, kind: b.kind, value: 0, formula: '', note: '', timing: b.timing, miles: 0 };
+    var raw = 0;
+    if (b.kind === 'mile') { p.miles = Math.floor(amount / b.per) * b.unit; raw = p.miles * mileValue; p.formula = fmt(amount) + '원 ÷ ' + fmt(b.per) + ' × ' + b.unit + ' = ' + p.miles + '마일 × ' + mileValue + '원'; }
+    else if (b.fixed) { raw = b.fixed; p.formula = fmt(b.minAmount || 0) + '원 이상 결제 시 ' + fmt(b.fixed) + '원'; }
+    else { raw = Math.floor(amount * b.rate / 100); p.formula = fmt(amount) + '원 × ' + b.rate + '% = ' + fmt(raw) + '원'; }
+    var blocked = false;
+    if (b.easy === 'exclude' && isEasy) { blocked = true; p.note = payName(pay) + '로 결제하면 제외'; r.notes.push(payName(pay) + '로 내면 “' + b.label + '”이 빠져요'); }
+    if (b.easy === 'only' && !isEasy) { blocked = true; p.note = '간편결제로만 적용'; }
+    if (!blocked && b.minAmount && amount < b.minAmount) { blocked = true; p.note = fmt(b.minAmount) + '원 이상 결제 시 적용'; }
+    var v = blocked ? 0 : raw;
+    var rem = remainingCap(b);
+    if (!blocked && rem !== null) {
+      if (rem <= 0) { v = 0; p.note = '이번 달 한도 소진'; }
+      else if (v > rem) { v = rem; p.note = '한도 ' + fmt(rem) + '원 남아 일부만 적용'; }
+    }
+    if (b.easy === 'only' && !isEasy) {
+      var alt = Math.floor(amount * b.rate / 100); if (rem !== null) alt = Math.min(alt, rem);
+      if (alt > 0) r.tips.push('네이버페이·카카오페이로 내면 +' + fmt(alt) + '원');
+    }
+    p.value = v; p.raw = raw; p.rem = rem;
+    if (b.kind === 'mpoint') p.sub = (v > 0 ? fmt(v) + '원 상당 ' : '') + b.pointName + ' · ' + b.pointPlace + '에서만 사용';
+    total += v;
+    if (v > 0) kinds[b.kind] = true;
+    r.parts.push(p);
+  });
+  // 전월 실적
+  if (card.tierMin > 0) {
+    if (card.prevTier === 'unmet') { r.maxValue = total; total = 0; r.reason = '전월 실적 미달 (' + fmt(card.tierMin / 10000) + '만원 필요)'; }
+    else if (card.prevTier === 'unknown') { r.maxValue = total; total = 0; r.reason = '지난달 실적을 몰라요 · 미달이면 0원'; }
+  }
+  r.value = total;
+  var ks = Object.keys(kinds);
+  if (total > 0) {
+    if (ks.length === 1 && ks[0] === 'discount') r.headline = fmt(total) + '원 할인';
+    else if (ks.length === 1 && ks[0] === 'cashback') r.headline = fmt(total) + '원 캐시백';
+    else r.headline = fmt(total) + '원 상당';
+    var subs = [];
+    r.parts.forEach(function (p) {
+      if (p.value <= 0) return;
+      if (p.kind === 'discount') subs.push(fmt(p.value) + '원 할인');
+      else if (p.kind === 'cashback') subs.push(fmt(p.value) + '원 캐시백');
+      else if (p.kind === 'point') subs.push(fmt(p.value) + 'P 적립');
+      else if (p.kind === 'mile') subs.push(p.miles + '마일 적립');
+      else if (p.kind === 'mpoint') subs.push(fmt(p.value) + '원 쿠팡캐시');
+    });
+    r.sub = subs.length > 1 ? '= ' + subs.join(' + ') : (r.headline.indexOf('상당') >= 0 ? subs[0] : '');
+    r.status = 'ok';
+  } else {
+    r.status = 'zero';
+    if (!r.reason) {
+      var n = r.parts.filter(function (p) { return p.note; })[0];
+      r.reason = n ? n.note : '혜택 없음';
+    }
+  }
+  if (r.maxValue > 0) r.conditional = true;
+  return r;
+}
+
+function shortfall(card) { return card.tierMin > 0 && card.monthSpend < card.tierMin ? card.tierMin - card.monthSpend : 0; }
+function capRoom(res) {
+  var min = null;
+  res.parts.forEach(function (p) { if (p.rem !== null && p.rem !== undefined && (min === null || p.rem < min)) min = p.rem; });
+  return min === null ? Infinity : min;
+}
+
+// 전체 순위
+function rankAll(cards, m, amount, pay, mileValue, tiePick) {
+  var res = cards.map(function (c) { return computeCard(c, m, amount, pay, mileValue); });
+  var ok = res.filter(function (r) { return r.value > 0; }).sort(function (a, b) { return b.value - a.value; });
+  var others = res.filter(function (r) { return r.value <= 0; });
+  var out = { best: null, ties: [], tieReason: '', options: [], rest: [], others: others };
+  if (!ok.length) return out;
+  var top = ok[0].value;
+  var tie = ok.filter(function (r) { return top - r.value <= 100; });
+  var best = tie[0];
+  if (tie.length > 1) {
+    var sf = tie.filter(function (r) { return shortfall(r.card) > 0; }).sort(function (a, b) { return shortfall(b.card) - shortfall(a.card); });
+    var room = tie.slice().sort(function (a, b) { return capRoom(b) - capRoom(a); });
+    var chk = tie.filter(function (r) { return r.card.type === '체크'; });
+    if (sf.length) { best = sf[0]; out.tieReason = '이번 달 실적이 ' + fmt(shortfall(best.card)) + '원 부족해요'; }
+    else if (capRoom(room[0]) !== capRoom(room[room.length - 1])) { best = room[0]; out.tieReason = '이번 달 한도가 가장 넉넉해요'; }
+    else if (chk.length) { best = chk[0]; out.tieReason = '체크카드라 소득공제율이 유리해요'; }
+    else out.tieReason = '혜택이 가장 커요';
+    var opts = [];
+    if (sf.length) opts.push({ tag: '실적 채우기', r: sf[0], why: '실적 ' + fmt(shortfall(sf[0].card)) + '원 부족' });
+    var rm = room[0]; if (capRoom(rm) !== Infinity) opts.push({ tag: '한도 여유', r: rm, why: '한도 ' + fmt(capRoom(rm)) + '원 남음' });
+    if (chk.length) opts.push({ tag: '소득공제 유리', r: chk[0], why: '체크카드' });
+    out.options = opts;
+    out.ties = tie;
+    if (tiePick) { var pk = tie.filter(function (r) { return r.card.id === tiePick; })[0]; if (pk) { best = pk; out.tieReason = '직접 고른 카드'; } }
+  }
+  out.best = best;
+  out.rest = ok.filter(function (r) { return r !== best; });
+  return out;
+}
+
+
+var FAQ = [
+  { cat: '추천 계산', items: [
+    { id: 'how', q: '추천은 어떻게 계산하나요?', a: '카드사 상품설명서를 사람이 검수한 혜택 데이터로, 지금 가맹점·결제 금액·결제수단·이번 달 실적과 남은 한도를 넣어 카드별 혜택을 계산해요. 할인·캐시백·포인트·마일리지는 모두 원화로 바꿔 비교하고, 1등 카드에는 계산식을 함께 보여드려요. AI는 혜택 정리에만 쓰고, 추천 계산은 정해진 규칙으로만 해요.' },
+    { id: 'amount', q: '결제 금액을 꼭 넣어야 하나요?', a: '아니요. 금액을 넣지 않으면 업종별 대표 금액(예: 카페 6,000원)으로 계산한 예상 결과를 보여드리고, “6,000원 기준”이라고 표시해요. 할인 방식(%와 정액)이나 최소 결제금액 조건 때문에 금액에 따라 순위가 바뀔 수 있어서, 금액을 넣거나 5천·1만·3만 버튼을 누르면 더 정확해져요.' },
+    { id: 'tie', q: '두 카드 혜택이 비슷하면 어떻게 추천하나요?', a: '혜택 차이가 100원 이내면 비슷하다고 보고, ① 이번 달 실적이 부족한 카드 ② 한도가 넉넉한 카드 ③ 소득공제율이 유리한 체크카드 순으로 추천해요. 추천 이유를 한 줄로 보여드리고, 다른 선택지도 이유와 함께 고를 수 있어요.' },
+    { id: 'mile', q: '마일리지는 몇 원으로 계산하나요?', a: '기본은 1마일 = 15원이에요. “1,000원당 1마일”은 적립 속도이고, 1마일의 가치는 쓰는 방법(항공권, 쇼핑)에 따라 달라서 따로 정해요. 더보기 > 설정에서 10원·15원·20원 중에 바꿀 수 있어요.' },
+    { id: 'equiv', q: '“원 상당”은 무슨 뜻인가요?', a: '포인트·마일리지·특정 가맹점 전용 포인트처럼 현금이 아닌 혜택을 원화로 바꾼 값이에요. 할인과 캐시백은 “원 할인”, “원 캐시백”으로, 나머지는 “원 상당”으로 구분해 보여드려요.' },
+    { id: 'pay', q: '네이버페이로 결제하면 결과가 달라지나요?', a: '네, 달라질 수 있어요. 간편결제로 내면 빠지는 혜택도 있고, 간편결제에서만 주는 혜택도 있어요. 결과 화면의 결제수단 버튼을 바꾸면 바로 다시 계산하고, 더 유리한 결제수단이 있으면 팁으로 알려드려요.' },
+    { id: 'online', q: '쿠팡 같은 온라인 결제도 되나요?', a: '네. 온라인 가맹점은 위치로 찾을 수 없어서, 장소 화면에서 검색하거나 “온라인 쇼핑”, “배달앱” 버튼으로 골라주세요.' },
+    { id: 'merchantpoint', q: '특정 쇼핑몰에서만 쓰는 포인트는 어떻게 계산하나요?', a: '기본은 1포인트 = 1원으로 계산하고, “쿠팡에서만 사용”처럼 사용처를 함께 표시해요.' }
+  ] },
+  { cat: '카드와 실적', items: [
+    { id: 'tier', q: '지난달 실적은 왜 물어보나요?', a: '대부분의 카드는 지난달 쓴 금액으로 이번 달 혜택이 정해져요. 같은 카드라도 실적을 채웠는지에 따라 혜택이 0원이 될 수 있어서, 카드를 등록할 때 대략적인 구간만 여쭤봐요. 모르면 “실적 충족 시 / 미달 시”를 함께 보여드리고, 매월 1일에 기록을 바탕으로 다시 확인해 드려요.' },
+    { id: 'limit', q: '처음 등록한 카드의 남은 한도가 정확한가요?', a: '등록하기 전에 쓴 금액은 앱이 알 수 없어서, 등록한 달에는 “등록 전 사용분은 반영되지 않았어요”라고 표시해요. 등록할 때 이번 달 이미 받은 혜택을 넣거나, 카드 상세에서 사용액을 고칠 수 있어요. 다음 달부터는 기록과 청구서 대조로 정확해져요.' },
+    { id: 'na', q: '“계산 불가”는 왜 뜨나요?', a: '아직 혜택 정보를 검수하지 않은 카드이거나, 매달 혜택을 고르는 카드의 이번 달 선택이 없을 때예요. 정확하지 않은 결과를 보여드리지 않으려고 계산하지 않아요.' },
+    { id: 'missing', q: '내 카드가 목록에 없어요', a: '“찾는 카드가 없어요”에서 카드 이름을 알려주세요. 내 카드에는 바로 등록되고, 상품설명서로 혜택을 정리해 사람이 검수한 뒤 계산을 시작해요. 준비되면 알림을 보내드려요.' },
+    { id: 'excluded', q: '실적에 포함되지 않는 결제가 있나요?', a: '상품권, 공과금, 등록금, 해외 이용처럼 카드마다 실적에서 빠지는 결제가 있어요. 기록할 때 “실적 제외”로 표시하고, 직접 바꿀 수도 있어요.' },
+    { id: 'family', q: '가족카드도 등록할 수 있나요?', a: '별도 카드로 등록할 수 있어요. 본인 카드와 실적을 합치는 계산은 다음 버전에서 지원할 예정이에요.' },
+    { id: 'overseas', q: '해외 결제도 추천해 주나요?', a: '아직은 해외 결제를 계산하지 않아요. 해외 수수료와 환율이 함께 계산돼야 해서 이후 버전에서 지원할 예정이에요.' }
+  ] },
+  { cat: '기록과 정확도', items: [
+    { id: 'record', q: '결제 기록은 왜 하나요?', a: '기록해야 이번 달 실적과 남은 한도가 반영돼서 다음 추천이 정확해져요. 추천 화면에서 “이 카드로 결제했어요”를 누르고 금액만 확인하면 돼요.' },
+    { id: 'verify', q: '계산이 실제와 맞는지 어떻게 아나요?', a: '청구서가 나오면 기록한 결제를 건별로 “맞아요 / 달라요”로 확인해 주세요. 맞은 비율이 계산 정확도로 표시되고, 달라요는 실제 금액과 함께 신고돼 검수 후 데이터를 고쳐요.' },
+    { id: 'cancel', q: '결제를 취소했어요', a: '이번 달 탭의 기록에서 “취소”를 누르면 실적과 한도에서 빠져요. 부분취소는 금액을 고쳐주세요.' }
+  ] },
+  { cat: '개인정보', items: [
+    { id: 'cardno', q: '카드번호를 입력해야 하나요?', a: '아니요. 카드사와 상품 이름만 골라서 등록해요. 카드번호, 비밀번호, 계좌 정보는 받지 않아요.' },
+    { id: 'privacy', q: '내 결제 기록은 어디에 저장되나요?', a: '(기획 중) 결제 기록과 보유 카드 정보는 기기에만 저장하는 방향으로 기획하고 있어요.' }
+  ] }
+];
+
+var TIER_LABEL = { met: '충족', unmet: '미달', unknown: '모름', none: '' };
+
+function chipStyle(on) { return on ? { bg: '#E8EDFF', fg: '#1A3FCC', bd: '2px solid #2453FF', fw: '700' } : { bg: '#FFFFFF', fg: '#14161A', bd: '1px solid #D9DCE3', fw: '400' }; }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function initialRecords() {
+  return [
+    { id: 'r1', month: '10월', merchant: '투썸플레이스 역삼점', cardId: 'cafe', cardName: '예시 카페 특화 체크', amount: 5500, pay: 'card', expected: 1100, verdict: null, canceled: false, deltas: null },
+    { id: 'r2', month: '10월', merchant: 'GS25 역삼점', cardId: 'cafe', cardName: '예시 카페 특화 체크', amount: 4500, pay: 'card', expected: 450, verdict: 'ok', canceled: false, deltas: null },
+    { id: 'r3', month: '10월', merchant: '이디야 삼성역점', cardId: 'cafe', cardName: '예시 카페 특화 체크', amount: 4000, pay: 'naver', expected: 800, verdict: 'diff', actual: 0, reason: '할인이 안 됐어요', canceled: false, deltas: null },
+    { id: 'r4', month: '10월', merchant: '이마트 성수점', cardId: 'mile', cardName: '예시 항공 마일 신용', amount: 40000, pay: 'card', expected: 600, verdict: 'ok', canceled: false, deltas: null }
+  ];
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.fresh();
+  }
+  fresh() {
+    return {
+      screen: 'home', prev: 'home', cards: initialCards(), records: initialRecords(),
+      merchantId: 'starbucks', amount: '', pay: 'card', defaultPay: 'card', mileValue: 15, tiePick: null,
+      lowConf: false, placePicked: true, placeQuery: '', placeCat: '',
+      draft: null, last: null, detailId: 'cafe', editUsed: false,
+      addIssuer: '예시A카드', addPick: null, addTier: 'met', addMember: true, addUsed: '',
+      reqName: '', reqType: '체크', reportId: null, reportActual: '', reportReason: '할인이 안 됐어요',
+      faqOpen: null, faqFocus: null, toast: ''
+    };
+  }
+  go(screen) { var self = this; return function () { self.setState({ prev: self.state.screen, screen: screen, editUsed: false }); }; }
+  toast(msg) { var self = this; this.setState({ toast: msg }); clearTimeout(this._t); this._t = setTimeout(function () { self.setState({ toast: '' }); }, 2400); }
+  merchant() { var id = this.state.merchantId; return MERCHANTS.filter(function (m) { return m.id === id; })[0]; }
+  amountValue(m) { var a = parseInt(this.state.amount, 10); return a > 0 ? a : m.defAmount; }
+  card(id) { return this.state.cards.filter(function (c) { return c.id === id; })[0]; }
+
+  applyRecord(cardId, m, amount, pay, sign, deltas) {
+    var cards = clone(this.state.cards);
+    var c = cards.filter(function (x) { return x.id === cardId; })[0];
+    if (!c) return { cards: cards, deltas: deltas };
+    if (!deltas) {
+      var res = computeCard(c, m, amount, pay, this.state.mileValue);
+      deltas = { spend: amount, caps: [], expected: res.value };
+      res.parts.forEach(function (p) {
+        if (p.value > 0) {
+          for (var i = 0; i < c.benefits.length; i++) if (c.benefits[i].label === p.label && c.benefits[i].cap) deltas.caps.push({ i: i, v: p.value });
+        }
+      });
+    }
+    c.monthSpend += sign * deltas.spend;
+    deltas.caps.forEach(function (d) { c.benefits[d.i].used = Math.max(0, (c.benefits[d.i].used || 0) + sign * d.v); });
+    return { cards: cards, deltas: deltas };
+  }
+
+  renderVals() {
+    var s = this.state, self = this;
+    var m = this.merchant();
+    var amount = this.amountValue(m);
+    var screens = ['home', 'place', 'record', 'recorded', 'cards', 'add', 'addTier', 'request', 'detail', 'status', 'verify', 'report', 'monthCheck', 'more', 'faq'];
+    var v = {};
+    screens.forEach(function (k) { v['is_' + k] = s.screen === k; });
+    v.showTabs = ['home', 'cards', 'status', 'more'].indexOf(s.screen) >= 0;
+    v.tabHome = s.screen === 'home' ? '#1A3FCC' : '#5B616E';
+    v.tabCards = s.screen === 'cards' ? '#1A3FCC' : '#5B616E';
+    v.tabStatus = s.screen === 'status' ? '#1A3FCC' : '#5B616E';
+    v.tabMore = s.screen === 'more' ? '#1A3FCC' : '#5B616E';
+    v.goHome = this.go('home'); v.goCards = this.go('cards'); v.goStatus = this.go('status'); v.goMore = this.go('more');
+    v.goPlace = this.go('place'); v.goAdd = this.go('add'); v.goRequest = this.go('request'); v.goVerify = this.go('verify'); v.goMonthCheck = this.go('monthCheck');
+    v.hasToast = !!s.toast; v.toast = s.toast;
+    v.openFaq = function (id) { return function () { self.setState({ prev: s.screen, screen: 'faq', faqFocus: id, faqOpen: id }); }; };
+    v.faqHow = v.openFaq('how'); v.faqAmount = v.openFaq('amount'); v.faqTie = v.openFaq('tie'); v.faqMile = v.openFaq('mile'); v.faqNa = v.openFaq('na'); v.faqOverseas = v.openFaq('overseas'); v.faqTier = v.openFaq('tier'); v.faqLimit = v.openFaq('limit'); v.faqVerify = v.openFaq('verify'); v.faqMissing = v.openFaq('missing'); v.faqPay = v.openFaq('pay');
+    v.faqBack = function () { self.setState({ screen: s.prev === 'faq' ? 'more' : s.prev, faqFocus: null }); };
+
+    // 홈
+    v.merchantName = m.name;
+    v.merchantMeta = m.online ? '온라인 · ' + m.cat + ' · ' + m.route : m.cat + ' · ' + m.dist;
+    v.amountInput = s.amount ? fmt(parseInt(s.amount, 10)) : '';
+    v.amountPlaceholder = fmt(m.defAmount) + '원 기준';
+    v.onAmount = function (e) { self.setState({ amount: String(e.target.value).replace(/[^0-9]/g, '').slice(0, 9), tiePick: null }); };
+    v.usingDefault = !s.amount;
+    v.defaultNote = fmt(m.defAmount) + '원 기준 예상 결과예요 · 금액을 넣으면 더 정확해져요';
+    v.quick = [5000, 10000, 30000].map(function (a) { var on = parseInt(s.amount, 10) === a; var c = chipStyle(on); return { label: a >= 10000 ? (a / 10000) + '만' : (a / 1000) + '천', bg: c.bg, fg: c.fg, bd: c.bd, on: function () { self.setState({ amount: String(a), tiePick: null }); } }; });
+    v.payChips = PAYS.map(function (p) { var c = chipStyle(s.pay === p.id); return { label: p.name, bg: c.bg, fg: c.fg, bd: c.bd, fw: c.fw, on: function () { self.setState({ pay: p.id, tiePick: null }); } }; });
+    v.needPick = s.lowConf && !s.placePicked;
+    v.showResult = !v.needPick;
+    var rk = rankAll(s.cards, m, amount, s.pay, s.mileValue, s.tiePick);
+    v.hasBest = !!rk.best && v.showResult;
+    v.noBest = !rk.best && v.showResult;
+    v.noBestText = m.overseas ? '해외 결제는 아직 계산하지 않아요' : '혜택을 주는 카드가 없어요';
+    if (rk.best) {
+      var b = rk.best;
+      v.best = { name: b.card.name, type: b.card.type, color: b.card.color, headline: b.headline, sub: b.sub, hasSub: !!b.sub };
+      v.bestLines = b.parts.filter(function (p) { return p.value > 0 || p.note; }).map(function (p) {
+        return { text: p.label + (p.value > 0 ? ' · ' + p.formula : ''), note: p.note ? p.note : (p.sub || ''), hasNote: !!(p.note || p.sub), timing: p.timing };
+      });
+      var capP = b.parts.filter(function (p) { return p.value > 0 && p.rem !== null && p.rem !== undefined; })[0];
+      v.bestCap = capP ? '이번 달 남은 한도 ' + fmt(Math.max(0, capP.rem - capP.value)) + '원 (결제 후)' : '';
+      v.hasBestCap = !!capP;
+      var timing = b.parts.filter(function (p) { return p.value > 0; }).map(function (p) { return p.timing; });
+      v.bestTiming = timing.filter(function (t, i) { return timing.indexOf(t) === i; }).join(' · ');
+      v.hasMile = b.parts.some(function (p) { return p.kind === 'mile' && p.value > 0; });
+      v.mileNote = '1마일 = ' + s.mileValue + '원으로 계산했어요. 항공권에 쓰면 가치가 더 높고, 쇼핑에 쓰면 낮아질 수 있어요.';
+      v.hasTips = b.tips.length > 0; v.bestTips = b.tips.map(function (t) { return { text: t }; });
+      v.hasTie = rk.ties.length > 1;
+      v.tieReason = rk.tieReason;
+      v.tieOptions = rk.options.map(function (o) { var on = o.r.card.id === b.card.id; return { tag: o.tag, name: o.r.card.name, why: o.why, bg: on ? '#E8EDFF' : '#FFFFFF', bd: on ? '2px solid #2453FF' : '1px solid #D9DCE3', on: function () { self.setState({ tiePick: o.r.card.id }); } }; });
+      v.recordBest = function () { self.setState({ prev: 'home', screen: 'record', draft: { cardId: b.card.id, amount: String(amount), pay: s.pay } }); };
+    }
+    var rows = [];
+    rk.rest.forEach(function (r) { rows.push({ name: r.card.name, color: r.card.color, value: r.headline, reason: r.sub || r.parts.filter(function (p) { return p.value > 0; }).map(function (p) { return p.label; }).join(' + '), rc: '#5B616E', act: '', on: null }); });
+    rk.others.forEach(function (r) {
+      var row = { name: r.card.name, color: r.card.color, value: r.status === 'na' ? '계산 불가' : '혜택 없음', reason: r.reason, rc: '#5B616E', act: '', on: null };
+      if (r.conditional) { row.value = '최대 ' + fmt(r.maxValue) + '원'; row.rc = '#B54708'; row.act = '실적 입력'; row.on = function () { self.setState({ prev: 'home', screen: 'detail', detailId: r.card.id }); }; }
+      else if (r.reason.indexOf('미달') >= 0) { row.rc = '#B54708'; }
+      if (r.tips.length) { row.reason = r.reason + ' · ' + r.tips[0]; row.rc = '#1A3FCC'; row.act = '네이버페이로 보기'; row.on = function () { self.setState({ pay: 'naver', tiePick: null }); }; }
+      if (r.status === 'na') { row.act = '왜?'; row.on = r.reason.indexOf('해외') >= 0 ? v.faqOverseas : v.faqNa; }
+      rows.push(row);
+    });
+    v.rows = rows.map(function (x) { x.hasAct = !!x.act; x.onAct = x.on || function () {}; return x; });
+    v.pickPlace = this.go('place');
+
+    // 장소
+    v.onQuery = function (e) { self.setState({ placeQuery: e.target.value }); };
+    v.placeQuery = s.placeQuery;
+    v.needPickBanner = s.lowConf && !s.placePicked;
+    var q = s.placeQuery.trim();
+    var filt = MERCHANTS.filter(function (x) { return (!q || x.name.indexOf(q) >= 0 || x.cat.indexOf(q) >= 0) && (!s.placeCat || x.cat === s.placeCat); });
+    function placeItem(x) { var sel = x.id === s.merchantId && s.placePicked; return { name: x.name, meta: x.online ? '온라인 · ' + x.cat : x.cat + ' · ' + x.dist, selTag: sel ? '선택됨' : '', hasSel: sel, on: function () { self.setState({ merchantId: x.id, placePicked: true, amount: '', tiePick: null, screen: 'home', placeQuery: '', placeCat: '' }); } }; }
+    v.nearby = filt.filter(function (x) { return !x.online && !x.overseas; }).map(placeItem);
+    v.onlineList = filt.filter(function (x) { return x.online; }).map(placeItem);
+    v.testList = filt.filter(function (x) { return x.overseas; }).map(placeItem);
+    v.hasNearby = v.nearby.length > 0; v.hasOnline = v.onlineList.length > 0; v.hasTest = v.testList.length > 0;
+    v.catChips = ['카페', '편의점', '대형마트', '온라인 쇼핑', '배달앱', '항공'].map(function (c) { var st = chipStyle(s.placeCat === c); return { label: c, bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ placeCat: s.placeCat === c ? '' : c }); } }; });
+
+    // 기록
+    if (s.draft) {
+      var dc = this.card(s.draft.cardId);
+      var damt = parseInt(s.draft.amount, 10) || 0;
+      var dres = computeCard(dc, m, damt, s.draft.pay, s.mileValue);
+      v.draftCard = dc.name; v.draftAmount = damt ? fmt(damt) : '';
+      v.onDraftAmount = function (e) { var d = clone(s.draft); d.amount = String(e.target.value).replace(/[^0-9]/g, '').slice(0, 9); self.setState({ draft: d }); };
+      v.draftPayChips = PAYS.map(function (p) { var c = chipStyle(s.draft.pay === p.id); return { label: p.name, bg: c.bg, fg: c.fg, bd: c.bd, on: function () { var d = clone(s.draft); d.pay = p.id; self.setState({ draft: d }); } }; });
+      v.draftCardChips = s.cards.filter(function (c) { return c.status !== 'pending'; }).map(function (c) { var st = chipStyle(c.id === s.draft.cardId); return { label: c.name.replace('예시 ', ''), bg: st.bg, fg: st.fg, bd: st.bd, on: function () { var d = clone(s.draft); d.cardId = c.id; self.setState({ draft: d }); } }; });
+      v.draftBenefit = dres.value > 0 ? dres.headline : '혜택 없음 · ' + dres.reason;
+      v.draftSpend = fmt(dc.monthSpend / 10000) + '만 → ' + fmt((dc.monthSpend + damt) / 10000) + '만원';
+      v.draftSpend = (Math.round(dc.monthSpend / 1000) / 10) + '만 → ' + (Math.round((dc.monthSpend + damt) / 1000) / 10) + '만원';
+      var cp = dres.parts.filter(function (p) { return p.value > 0 && p.rem !== null && p.rem !== undefined; })[0];
+      v.hasDraftCap = !!cp; v.draftCap = cp ? cp.label + ' 남은 한도 ' + fmt(cp.rem) + ' → ' + fmt(cp.rem - cp.value) + '원' : '';
+      v.canRecord = damt > 0;
+      v.doRecord = function () {
+        if (!damt) return;
+        var out = self.applyRecord(dc.id, m, damt, s.draft.pay, 1, null);
+        var rec = { id: 'n' + Date.now(), month: '11월', merchant: m.name, cardId: dc.id, cardName: dc.name, amount: damt, pay: s.draft.pay, expected: out.deltas.expected, verdict: null, canceled: false, deltas: out.deltas };
+        var after = out.cards.filter(function (c) { return c.id === dc.id; })[0];
+        var capAfter = cp ? after.benefits.filter(function (bb) { return bb.label === cp.label; })[0] : null;
+        self.setState({ cards: out.cards, records: [rec].concat(s.records), screen: 'recorded', last: { id: rec.id, card: dc.name, merchant: m.name, amount: damt, benefit: dres.value > 0 ? dres.headline : '혜택 없음', timing: dres.parts.filter(function (p) { return p.value > 0; }).map(function (p) { return p.timing; })[0] || '', spend: after.monthSpend, tierMin: after.tierMin, cap: capAfter ? { label: capAfter.label, used: capAfter.used, cap: capAfter.cap } : null } });
+      };
+    }
+    v.cancelDraft = this.go('home');
+
+    // 기록 완료
+    if (s.last) {
+      var L = s.last;
+      v.lastTitle = L.card + '로 ' + fmt(L.amount) + '원 결제';
+      v.lastBenefit = L.benefit + (L.timing ? ' · ' + L.timing : '');
+      v.lastSpend = L.tierMin > 0 ? '이번 달 실적 ' + (Math.round(L.spend / 1000) / 10) + '만 / ' + (L.tierMin / 10000) + '만원' : '이번 달 사용 ' + (Math.round(L.spend / 1000) / 10) + '만원';
+      v.lastSpendPct = L.tierMin > 0 ? Math.min(100, Math.round(L.spend / L.tierMin * 100)) : 100;
+      v.hasLastCap = !!L.cap;
+      if (L.cap) { v.lastCap = L.cap.label + ' ' + fmt(L.cap.used) + ' / ' + fmt(L.cap.cap) + '원 사용 · ' + fmt(L.cap.cap - L.cap.used) + '원 남음'; v.lastCapPct = Math.min(100, Math.round(L.cap.used / L.cap.cap * 100)); }
+      v.undoLast = function () {
+        var rec = s.records.filter(function (r) { return r.id === L.id; })[0];
+        var out = self.applyRecord(rec.cardId, m, rec.amount, rec.pay, -1, rec.deltas);
+        self.setState({ cards: out.cards, records: s.records.filter(function (r) { return r.id !== L.id; }), screen: 'home', last: null });
+        self.toast('기록을 되돌렸어요');
+      };
+    }
+
+    // 내 카드
+    v.myCards = s.cards.map(function (c) {
+      var pend = c.status === 'pending';
+      return { name: c.name, color: c.color, sub: pend ? '요청 접수됨 · 검수가 끝나면 알려드려요' : c.type + ' · ' + c.benefits.slice(0, 2).map(function (bb) { return bb.label; }).join(', '), badge: pend ? '준비 중' : '검증됨', bbg: pend ? '#FFF1E0' : '#E7F6EE', bfg: pend ? '#8A3B00' : '#0B6B44', bd: pend ? '1px dashed #C4C8D1' : '1px solid #FFFFFF',
+        on: pend ? v.faqMissing : function () { self.setState({ prev: 'cards', screen: 'detail', detailId: c.id, editUsed: false }); } };
+    });
+
+    // 카드 추가
+    v.issuerChips = ['예시A카드', '예시B카드', '예시C카드'].map(function (i) { var st = chipStyle(s.addIssuer === i); return { label: i, bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ addIssuer: i }); } }; });
+    var owned = s.cards.filter(function (c) { return c.issuer === s.addIssuer; }).map(function (c) { return { name: c.name, sub: c.type + (c.status === 'pending' ? ' · 준비 중' : ' · 검증됨'), isOwned: true, notOwned: false, on: function () {} }; });
+    var avail = CATALOG.filter(function (c) { return c.issuer === s.addIssuer && !self.card(c.id); }).map(function (c) { return { name: c.name, sub: c.type + ' · 검증됨', isOwned: false, notOwned: true, on: function () { self.setState({ screen: 'addTier', addPick: c.id, addTier: c.tierMin > 0 ? 'met' : 'none', addMember: true, addUsed: '' }); } }; });
+    v.addList = avail.concat(owned);
+
+    // 등록 질문
+    var pick = CATALOG.filter(function (c) { return c.id === s.addPick; })[0];
+    if (pick) {
+      v.pickName = pick.name;
+      v.pickHasTier = pick.tierMin > 0;
+      var man = pick.tierMin / 10000;
+      v.tierOpts = [['met', man + '만원 이상'], ['unmet', man + '만원 미만'], ['unknown', '잘 모르겠어요']].map(function (o) { var st = chipStyle(s.addTier === o[0]); return { label: o[1], bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ addTier: o[0] }); } }; });
+      v.pickHasMember = !!pick.memberLabel; v.pickMemberQ = pick.memberLabel || '';
+      v.memberOpts = [[true, '예'], [false, '아니요']].map(function (o) { var st = chipStyle(s.addMember === o[0]); return { label: o[1], bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ addMember: o[0] }); } }; });
+      v.pickHasCap = pick.benefits.some(function (bb) { return bb.cap; });
+      v.addUsed = s.addUsed ? fmt(parseInt(s.addUsed, 10)) : '';
+      v.onAddUsed = function (e) { self.setState({ addUsed: String(e.target.value).replace(/[^0-9]/g, '').slice(0, 7) }); };
+      v.confirmAdd = function () {
+        var c = clone(pick); c.prevTier = c.tierMin > 0 ? s.addTier : 'none'; c.monthSpend = 0; c.isMember = !!s.addMember; c.justAdded = true;
+        var u = parseInt(s.addUsed, 10) || 0; if (u) { for (var i = 0; i < c.benefits.length; i++) if (c.benefits[i].cap) { c.benefits[i].used = Math.min(c.benefits[i].cap, u); break; } }
+        self.setState({ cards: s.cards.concat([c]), screen: 'cards' });
+        self.toast('등록했어요 · 등록 전 사용분은 반영되지 않았어요');
+      };
+    }
+
+    // 카드 요청
+    v.reqName = s.reqName;
+    v.onReqName = function (e) { self.setState({ reqName: e.target.value }); };
+    v.reqTypeChips = ['신용', '체크'].map(function (t) { var st = chipStyle(s.reqType === t); return { label: t, bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ reqType: t }); } }; });
+    v.submitReq = function () {
+      var name = s.reqName.trim() || '요청한 카드';
+      var c = { id: 'req' + Date.now(), issuer: s.addIssuer, name: name, type: s.reqType, color: '#9AA1AF', tierMin: 0, prevTier: 'none', monthSpend: 0, status: 'pending', benefits: [] };
+      self.setState({ cards: s.cards.concat([c]), screen: 'cards', reqName: '' });
+      self.toast('요청했어요 · 검수가 끝나면 알려드릴게요');
+    };
+
+    // 카드 상세
+    var dcard = this.card(s.detailId);
+    if (dcard) {
+      v.dName = dcard.name; v.dType = dcard.type + ' · ' + dcard.issuer; v.dColor = dcard.color;
+      v.dHasTier = dcard.tierMin > 0;
+      var dman = dcard.tierMin / 10000;
+      v.dTierOpts = [['met', dman + '만원 이상'], ['unmet', dman + '만원 미만'], ['unknown', '모름']].map(function (o) { var st = chipStyle(dcard.prevTier === o[0]); return { label: o[1], bg: st.bg, fg: st.fg, bd: st.bd, on: function () { var cs = clone(s.cards); cs.forEach(function (c) { if (c.id === dcard.id) c.prevTier = o[0]; }); self.setState({ cards: cs }); } }; });
+      v.dSpend = '이번 달 ' + (Math.round(dcard.monthSpend / 1000) / 10) + '만원 사용 · 기록으로 추정';
+      v.dHasMember = !!dcard.memberLabel; v.dMemberQ = dcard.memberLabel || '';
+      v.dMemberOpts = [[true, '회원'], [false, '비회원']].map(function (o) { var st = chipStyle(!!dcard.isMember === o[0]); return { label: o[1], bg: st.bg, fg: st.fg, bd: st.bd, on: function () { var cs = clone(s.cards); cs.forEach(function (c) { if (c.id === dcard.id) c.isMember = o[0]; }); self.setState({ cards: cs }); } }; });
+      v.dJustAdded = !!dcard.justAdded;
+      v.dBenefits = dcard.benefits.filter(function (bb) { return !(bb.member === true && !dcard.isMember) && !(bb.member === false && dcard.isMember); }).map(function (bb) {
+        var idx = dcard.benefits.indexOf(bb);
+        var easy = bb.easy === 'exclude' ? '간편결제로 결제하면 제외' : bb.easy === 'only' ? '간편결제로 결제할 때만 적용' : '';
+        var cond = [easy, bb.minAmount ? fmt(bb.minAmount) + '원 이상 결제 시' : '', bb.pointPlace ? bb.pointName + ' · ' + bb.pointPlace + '에서만 사용' : '', bb.timing].filter(function (x) { return x; }).join(' · ');
+        return { label: bb.label, cond: cond, hasCap: !!bb.cap, capText: bb.cap ? fmt(bb.used || 0) + ' / ' + fmt(bb.cap) + '원 사용' : '', pct: bb.cap ? Math.min(100, Math.round((bb.used || 0) / bb.cap * 100)) : 0, used: bb.cap ? String(bb.used || 0) : '', showEdit: s.editUsed && !!bb.cap,
+          onUsed: function (e) { var val = parseInt(String(e.target.value).replace(/[^0-9]/g, ''), 10) || 0; var cs = clone(s.cards); cs.forEach(function (c) { if (c.id === dcard.id) c.benefits[idx].used = Math.min(c.benefits[idx].cap, val); }); self.setState({ cards: cs }); } };
+      });
+      v.dHasCaps = dcard.benefits.some(function (bb) { return bb.cap; });
+      v.toggleEdit = function () { self.setState({ editUsed: !s.editUsed }); };
+      v.editLabel = s.editUsed ? '완료' : '사용액 고치기';
+    }
+    v.detailBack = function () { self.setState({ screen: s.prev === 'home' ? 'home' : 'cards' }); };
+
+    // 이번 달
+    var cur = s.records.filter(function (r) { return r.month === '11월' && !r.canceled; });
+    v.monthTotal = fmt(cur.reduce(function (a, r) { return a + r.expected; }, 0));
+    v.pendingVerify = s.records.filter(function (r) { return !r.canceled && r.verdict === null; }).length;
+    v.statusCards = s.cards.filter(function (c) { return c.status !== 'pending'; }).map(function (c) {
+      var caps = c.benefits.filter(function (bb) { return bb.cap && !(bb.member === true && !c.isMember) && !(bb.member === false && c.isMember); }).map(function (bb) { return { label: bb.label, text: fmt(bb.used || 0) + ' / ' + fmt(bb.cap) + '원', pct: Math.min(100, Math.round((bb.used || 0) / bb.cap * 100)) }; });
+      var sf = shortfall(c);
+      return { name: c.name, color: c.color, hasTier: c.tierMin > 0, tierText: (Math.round(c.monthSpend / 1000) / 10) + '만 / ' + (c.tierMin / 10000) + '만원', tierPct: c.tierMin ? Math.min(100, Math.round(c.monthSpend / c.tierMin * 100)) : 0, barColor: sf > 0 ? '#E08A1E' : '#2453FF', badge: c.tierMin > 0 ? (sf > 0 ? fmt(sf / 10000) + '만원 남음' : '실적 충족') : '무실적', badgeColor: sf > 0 ? '#B54708' : '#0B6B44', caps: caps, hasCaps: caps.length > 0 };
+    });
+    v.curRecords = s.records.filter(function (r) { return r.month === '11월'; }).map(function (r) {
+      return { text: r.merchant + ' · ' + r.cardName.replace('예시 ', ''), amount: fmt(r.amount) + '원 · ' + payName(r.pay), value: r.canceled ? '취소됨' : (r.expected > 0 ? '-' + fmt(r.expected) + '원' : '0원'), vc: r.canceled ? '#9AA1AF' : '#0B6B44', canCancel: !r.canceled, on: function () {
+        var out = self.applyRecord(r.cardId, MERCHANTS[0], r.amount, r.pay, -1, r.deltas);
+        self.setState({ cards: out.cards, records: s.records.map(function (x) { if (x.id === r.id) { var y = clone(x); y.canceled = true; return y; } return x; }) });
+        self.toast('취소로 바꿨어요 · 실적과 한도에서 뺐어요');
+      } };
+    });
+    v.hasCurRecords = v.curRecords.length > 0; v.noCurRecords = !v.hasCurRecords;
+
+    // 대조
+    var judged = s.records.filter(function (r) { return !r.canceled && r.verdict; });
+    var okc = judged.filter(function (r) { return r.verdict === 'ok'; }).length;
+    v.accuracy = judged.length ? Math.round(okc / judged.length * 100) + '%' : '-';
+    v.accuracyText = '확인 ' + judged.length + '건 중 ' + okc + '건 일치 · ' + v.pendingVerify + '건 남음';
+    v.verifyList = s.records.filter(function (r) { return !r.canceled; }).map(function (r) {
+      var setV = function (val) { return function () { if (val === 'diff') { self.setState({ screen: 'report', reportId: r.id, reportActual: '', reportReason: '할인이 안 됐어요' }); return; } self.setState({ records: s.records.map(function (x) { if (x.id === r.id) { var y = clone(x); y.verdict = val; return y; } return x; }) }); }; };
+      return { title: r.merchant, meta: r.month + ' · ' + r.cardName.replace('예시 ', '') + ' · ' + fmt(r.amount) + '원 · ' + payName(r.pay), expected: '예상 ' + fmt(r.expected) + '원', pendingV: r.verdict === null, isOk: r.verdict === 'ok', isDiff: r.verdict === 'diff', diffText: '실제 ' + fmt(r.actual || 0) + '원 · ' + (r.reason || '') + ' · 신고함', onOk: setV('ok'), onDiff: setV('diff') };
+    });
+
+    // 신고
+    var rr = s.records.filter(function (r) { return r.id === s.reportId; })[0];
+    if (rr) {
+      v.rTitle = rr.merchant + ' · ' + rr.cardName.replace('예시 ', ''); v.rExpected = '예상 ' + fmt(rr.expected) + '원';
+      v.rActual = s.reportActual; v.onRActual = function (e) { self.setState({ reportActual: String(e.target.value).replace(/[^0-9]/g, '').slice(0, 7) }); };
+      v.reasonChips = ['할인이 안 됐어요', '할인율이 달라요', '한도가 달라요', '가맹점 분류가 달라요', '잘 모르겠어요'].map(function (t) { var st = chipStyle(s.reportReason === t); return { label: t, bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ reportReason: t }); } }; });
+      v.submitReport = function () { self.setState({ screen: 'verify', records: s.records.map(function (x) { if (x.id === rr.id) { var y = clone(x); y.verdict = 'diff'; y.actual = parseInt(s.reportActual, 10) || 0; y.reason = s.reportReason; return y; } return x; }) }); self.toast('신고했어요 · 검수 후 알려드릴게요'); };
+    }
+
+    // 매월 실적 확인
+    v.checkCards = s.cards.filter(function (c) { return c.tierMin > 0 && c.status !== 'pending'; }).map(function (c) {
+      var man2 = c.tierMin / 10000;
+      return { name: c.name, est: '10월 기록 기준 추정 ' + (Math.round((c.monthSpend * 0.95) / 1000) / 10) + '만원', opts: [['met', man2 + '만 이상'], ['unmet', man2 + '만 미만'], ['unknown', '모름']].map(function (o) { var st = chipStyle(c.prevTier === o[0]); return { label: o[1], bg: st.bg, fg: st.fg, bd: st.bd, on: function () { var cs = clone(s.cards); cs.forEach(function (x) { if (x.id === c.id) x.prevTier = o[0]; }); self.setState({ cards: cs }); } }; }) };
+    });
+    v.doneCheck = function () { self.setState({ screen: 'status' }); self.toast('11월 실적 구간을 확인했어요'); };
+
+    // 더보기
+    v.mileChips = [10, 15, 20].map(function (n) { var st = chipStyle(s.mileValue === n); return { label: n + '원', bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ mileValue: n }); } }; });
+    v.defPayChips = PAYS.map(function (p) { var st = chipStyle(s.defaultPay === p.id); return { label: p.name, bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ defaultPay: p.id, pay: p.id }); } }; });
+    v.confChips = [[false, '자동 선택 (보통)'], [true, '실내 · 후보 여러 개']].map(function (o) { var st = chipStyle(s.lowConf === o[0]); return { label: o[1], bg: st.bg, fg: st.fg, bd: st.bd, on: function () { self.setState({ lowConf: o[0], placePicked: !o[0] }); } }; });
+    v.goFaqList = function () { self.setState({ prev: 'more', screen: 'faq', faqFocus: null, faqOpen: null }); };
+    v.resetAll = function () { self.setState(self.fresh()); self.toast('처음 상태로 되돌렸어요'); };
+    v.goSettingsFromHome = function () { self.setState({ prev: 'home', screen: 'more' }); };
+
+    // FAQ
+    var focus = null;
+    v.faqCats = FAQ.map(function (g) {
+      return { cat: g.cat, items: g.items.map(function (it) { if (it.id === s.faqFocus) focus = it; var open = s.faqOpen === it.id; return { q: it.q, a: it.a, open: open, sign: open ? '−' : '+', on: function () { self.setState({ faqOpen: open ? null : it.id }); } }; }) };
+    });
+    v.hasFocus = !!focus; v.focusQ = focus ? focus.q : ''; v.focusA = focus ? focus.a : '';
+    v.faqBackLabel = s.prev === 'more' ? '더보기' : '돌아가기';
+    return v;
+  }
+}
+
+</script>
+</body>
+</html>
