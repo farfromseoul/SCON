@@ -90,6 +90,7 @@ docs/
   07-performance-limit-policy.md 실적·한도 정책
   08-exception-policy.md      예외 처리 정책
   09-core-flow.md             핵심 플로우
+  10-in-app-faq.md            앱 내 FAQ
   decisions-log.md            결정 기록 (확정/제안/미정)
   session-log.md              세션별 인수인계 기록 (최신이 위)
 data/
@@ -100,7 +101,8 @@ project-context/
   memory-card-benefit-app.md  Claude 메모리에 쌓인 프로젝트 사실
 design/
   README.md                   시안 설명, 화면 목록
-  mockups/                    화면 시안(.dc.html) + canvas.json
+  mockups/                    화면 시안(.dc.html) + canvas.json, Proto.dc.html(인터랙티브 프로토타입)
+  prototype/                  프로토타입 계산·화면 로직(참고용)
 slides/
   README.md                   소개 슬라이드 설명
   deck.json, slides/*.html    슬라이드 원본

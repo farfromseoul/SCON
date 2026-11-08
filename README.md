@@ -20,12 +20,13 @@ Be Cherry Picker, Useful APP for Smart Consumer and Life, Save your Money!
 | [docs/07-performance-limit-policy.md](docs/07-performance-limit-policy.md) | 실적·한도 정책 | 2단계 확정 |
 | [docs/08-exception-policy.md](docs/08-exception-policy.md) | 예외 처리 정책 | 2단계 확정 |
 | [docs/09-core-flow.md](docs/09-core-flow.md) | 핵심 플로우 | 2단계 확정 |
+| [docs/10-in-app-faq.md](docs/10-in-app-faq.md) | 앱 내 FAQ 질문·답변과 연결 위치 | 초안 |
 | [data/](data/README.md) | 브랜드·업종 사전, 테스트 케이스 양식 | 초안 |
 | [docs/decisions-log.md](docs/decisions-log.md) | 결정 기록 (확정/제안/미정) | 최신 |
 | [docs/session-log.md](docs/session-log.md) | 세션별 인수인계 기록 | 최신 |
 | [SESSION_START.md](SESSION_START.md) | Claude Code 새 세션 시작 방법과 명령 | 최신 |
 | [project-context/](project-context/) | claude.ai 프로젝트 설명과 메모리 | 참고 |
-| [design/](design/README.md) | 화면 시안 13개 (3개 시나리오) | 초안 |
+| [design/](design/README.md) | 화면 시안 13개 + 인터랙티브 프로토타입 | 초안 |
 | [slides/](slides/README.md) | 소개 슬라이드 7장 | 초안 |
 
 ## 진행 단계
