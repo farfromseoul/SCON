@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>결제 기록 확인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+body{margin:0}
+a{color:#2453FF}a:hover{color:#1A3FCC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #6B6F78; font-family: 'Noto Sans KR', sans-serif; color: #14161A; display: flex; flex-direction: column; justify-content: flex-end">
+<div style="background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 12px 20px 36px; display: flex; flex-direction: column; gap: 18px">
+<div style="width: 40px; height: 5px; border-radius: 3px; background: #D9DCE3; align-self: center" aria-hidden="true"></div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 20px; font-weight: 800">결제 기록하기</span>
+<a href="Main.dc.html" style="font-size: 14px; color: #5B616E; text-decoration: none; padding: 10px 4px">닫기</a>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5B616E">장소</span><span style="font-weight: 500">스타벅스 강남역점 · 카페</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px"><span style="color: #5B616E">결제 카드</span><span style="display: flex; align-items: center; gap: 8px"><span style="font-weight: 500">국민 · 카페 특화 체크</span><a href="Main.dc.html" style="font-size: 13px; padding: 6px 0">변경</a></span></div>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 700">실제 결제 금액</span>
+<input type="text" value="6,000원" style="height: 56px; padding: 0 16px; border-radius: 14px; border: 2px solid #2453FF; font-family: inherit; font-size: 22px; font-weight: 700; color: #14161A; background: #FFFFFF; box-sizing: border-box">
+<span style="font-size: 12px; color: #5B616E">추천 때 입력한 금액이에요. 영수증과 다르면 고쳐주세요.</span>
+</label>
+
+<div style="border-radius: 16px; background: #F5F6F8; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px; color: #5B616E">예상 혜택</span><span style="font-size: 20px; font-weight: 800; color: #1A3FCC">1,200원 할인</span></div>
+<span style="font-size: 12px; color: #5B616E">카페 20% · 청구 시 할인</span>
+<div style="height: 1px; background: #E4E6EB"></div>
+<span style="font-size: 13px; font-weight: 700">기록하면 이렇게 바뀌어요</span>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #5B616E">이번 달 실적</span><span>32만 → 32.6만원</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #5B616E">카페 할인 남은 한도</span><span>3,800 → 2,600원</span></div>
+</div>
+
+<a href="Recorded.dc.html" style="height: 54px; border-radius: 16px; background: #2453FF; color: #FFFFFF; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">기록하기</a>
+<span style="font-size: 12px; color: #5B616E; text-align: center">카드번호나 결제 정보는 받지 않아요. 기록은 이 기기에만 저장돼요.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

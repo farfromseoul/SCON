@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>없는 카드 요청</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+body{margin:0}
+a{color:#2453FF}a:hover{color:#1A3FCC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F5F6F8; font-family: 'Noto Sans KR', sans-serif; color: #14161A; display: flex; flex-direction: column">
+<div style="padding: 52px 12px 8px; display: flex; align-items: center; gap: 4px">
+<a href="AddCard.dc.html" aria-label="뒤로" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #14161A"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+<span style="font-size: 20px; font-weight: 800">찾는 카드 요청하기</span>
+</div>
+
+<div style="padding: 0 20px 32px; display: flex; flex-direction: column; gap: 16px; flex: 1">
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">카드사</span>
+<input type="text" value="우리카드" style="height: 50px; padding: 0 14px; border-radius: 12px; border: 1px solid #D9DCE3; font-family: inherit; font-size: 15px; background: #FFFFFF; color: #14161A; box-sizing: border-box">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">카드 이름 (카드 앞면이나 카드사 앱에 적힌 이름)</span>
+<input type="text" value="기본 체크" style="height: 50px; padding: 0 14px; border-radius: 12px; border: 1px solid #D9DCE3; font-family: inherit; font-size: 15px; background: #FFFFFF; color: #14161A; box-sizing: border-box">
+</label>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">종류</span>
+<div style="display: flex; gap: 8px">
+<button style="flex: 1; height: 44px; border-radius: 12px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 14px; color: #14161A">신용</button>
+<button style="flex: 1; height: 44px; border-radius: 12px; border: 2px solid #2453FF; background: #E8EDFF; font-family: inherit; font-size: 14px; font-weight: 700; color: #1A3FCC">체크</button>
+</div>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #5B616E">지난달 사용 금액 (선택)</span>
+<input type="text" placeholder="예: 30만원" style="height: 50px; padding: 0 14px; border-radius: 12px; border: 1px solid #D9DCE3; font-family: inherit; font-size: 15px; background: #FFFFFF; color: #14161A; box-sizing: border-box">
+</label>
+
+<div style="border-radius: 16px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 14px; font-weight: 700">요청하면 이렇게 진행돼요</span>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="width: 22px; height: 22px; border-radius: 11px; background: #2453FF; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">1</span><span style="font-size: 13px; line-height: 1.5; color: #33415C">내 카드에 바로 등록돼요. 추천에는 “계산 불가”로 보여요.</span></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="width: 22px; height: 22px; border-radius: 11px; background: #2453FF; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">2</span><span style="font-size: 13px; line-height: 1.5; color: #33415C">상품설명서로 혜택을 정리하고 사람이 검수해요.</span></div>
+<div style="display: flex; gap: 10px; align-items: flex-start"><span style="width: 22px; height: 22px; border-radius: 11px; background: #2453FF; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">3</span><span style="font-size: 13px; line-height: 1.5; color: #33415C">검수가 끝나면 알림을 보내고 추천에 포함해요.</span></div>
+</div>
+
+<a href="Cards.dc.html" style="margin-top: auto; height: 54px; border-radius: 16px; background: #2453FF; color: #FFFFFF; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">요청하고 내 카드에 등록</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

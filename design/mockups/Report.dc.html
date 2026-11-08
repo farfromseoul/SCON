@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>오류 신고</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+body{margin:0}
+a{color:#2453FF}a:hover{color:#1A3FCC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #6B6F78; font-family: 'Noto Sans KR', sans-serif; color: #14161A; display: flex; flex-direction: column; justify-content: flex-end">
+<div style="background: #FFFFFF; border-radius: 28px 28px 0 0; padding: 12px 20px 36px; display: flex; flex-direction: column; gap: 16px">
+<div style="width: 40px; height: 5px; border-radius: 3px; background: #D9DCE3; align-self: center" aria-hidden="true"></div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 20px; font-weight: 800">실제와 달라요</span>
+<a href="Verify.dc.html" style="font-size: 14px; color: #5B616E; text-decoration: none; padding: 10px 4px">닫기</a>
+</div>
+
+<div style="border-radius: 14px; background: #F5F6F8; padding: 12px 14px; display: flex; justify-content: space-between; font-size: 13px">
+<span>투썸플레이스 역삼점 · 국민 카페 특화 체크</span>
+<span style="font-weight: 700">예상 1,100원</span>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 700">실제로 받은 할인</span>
+<input type="text" value="550원" style="height: 52px; padding: 0 14px; border-radius: 12px; border: 2px solid #2453FF; font-family: inherit; font-size: 18px; font-weight: 700; color: #14161A; background: #FFFFFF; box-sizing: border-box">
+</label>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 700">어떻게 달랐나요?</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">할인이 안 됐어요</button>
+<button style="height: 40px; padding: 0 14px; border-radius: 20px; border: 2px solid #2453FF; background: #E8EDFF; font-family: inherit; font-size: 13px; font-weight: 700; color: #1A3FCC">할인율이 달라요</button>
+<button style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">한도가 달라요</button>
+<button style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">가맹점 분류가 달라요</button>
+<button style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #D9DCE3; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #14161A">잘 모르겠어요</button>
+</div>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; font-weight: 700">메모 (선택)</span>
+<textarea placeholder="예: 명세서에 10% 할인으로 찍혔어요" style="height: 72px; padding: 12px 14px; border-radius: 12px; border: 1px solid #D9DCE3; font-family: inherit; font-size: 14px; color: #14161A; background: #FFFFFF; resize: none; box-sizing: border-box"></textarea>
+</label>
+
+<a href="Verify.dc.html" style="height: 54px; border-radius: 16px; background: #2453FF; color: #FFFFFF; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">신고하기</a>
+<span style="font-size: 12px; line-height: 1.5; color: #5B616E; text-align: center">관리자가 상품설명서와 다시 대조해요. 데이터가 고쳐지면 알려드릴게요.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

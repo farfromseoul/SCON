@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>카드 혜택 상세</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+body{margin:0}
+a{color:#2453FF}a:hover{color:#1A3FCC}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F5F6F8; font-family: 'Noto Sans KR', sans-serif; color: #14161A; display: flex; flex-direction: column">
+<div style="padding: 52px 12px 4px; display: flex; align-items: center; justify-content: space-between">
+<a href="Cards.dc.html" aria-label="뒤로" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #14161A"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a>
+<a href="Report.dc.html" style="font-size: 13px; padding: 12px 8px; text-decoration: none">정보가 달라요</a>
+</div>
+
+<div style="padding: 0 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 14px; align-items: center">
+<span style="width: 80px; height: 52px; border-radius: 8px; background: #2453FF; flex: none" aria-hidden="true"></span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 20px; font-weight: 800">국민 · 카페 특화 체크</span>
+<span style="font-size: 13px; color: #5B616E">체크카드 · 연회비 없음</span>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #0B6B44">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>
+<span>검증됨 · 2026-11-01 상품설명서 기준</span>
+</div>
+
+<div style="border-radius: 16px; background: #FFFFFF; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 14px; font-weight: 700">전월 실적 구간</span><span style="font-size: 12px; color: #5B616E">지난달 32만원</span></div>
+<div style="display: flex; border-radius: 12px; background: #EEF0F4; padding: 3px">
+<button style="flex: 1; height: 36px; border-radius: 10px; border: 0; background: transparent; font-family: inherit; font-size: 13px; color: #5B616E">30만원 미만</button>
+<button style="flex: 1; height: 36px; border-radius: 10px; border: 0; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 700; color: #14161A">30만원 이상 · 적용 중</button>
+</div>
+</div>
+
+<span style="font-size: 13px; font-weight: 700; color: #5B616E; padding-top: 4px">혜택 (이번 달 사용 현황)</span>
+<div style="border-radius: 16px; background: #FFFFFF; display: flex; flex-direction: column">
+<div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #EEF0F4">
+<div style="display: flex; justify-content: space-between"><span style="font-size: 15px; font-weight: 700">카페 20% 할인</span><span style="font-size: 13px; color: #5B616E">월 5,000원</span></div>
+<div style="height: 6px; border-radius: 3px; background: #E4E6EB"><div style="width: 48%; height: 6px; border-radius: 3px; background: #2453FF"></div></div>
+<span style="font-size: 12px; color: #5B616E">2,400원 사용 · 2,600원 남음 · 스타벅스, 투썸 등</span>
+</div>
+<div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #EEF0F4">
+<div style="display: flex; justify-content: space-between"><span style="font-size: 15px; font-weight: 700">편의점 10% 할인</span><span style="font-size: 13px; color: #5B616E">월 3,000원</span></div>
+<div style="height: 6px; border-radius: 3px; background: #E4E6EB"><div style="width: 15%; height: 6px; border-radius: 3px; background: #2453FF"></div></div>
+<span style="font-size: 12px; color: #5B616E">450원 사용 · GS25, CU, 세븐일레븐</span>
+</div>
+<div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between"><span style="font-size: 15px; font-weight: 700">대중교통 10% 할인</span><span style="font-size: 13px; color: #5B616E">월 2,000원</span></div>
+<div style="height: 6px; border-radius: 3px; background: #E4E6EB"><div style="width: 0%; height: 6px; border-radius: 3px; background: #2453FF"></div></div>
+<span style="font-size: 12px; color: #5B616E">아직 사용 안 함 · 후불교통 기준</span>
+</div>
+</div>
+
+<div style="border-radius: 16px; background: #FFF4E5; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #6B3A00">유의사항</span>
+<span style="font-size: 12px; line-height: 1.6; color: #6B3A00">간편결제(네이버페이 등)로 결제하면 할인 제외<br>건당 5천원 이상 결제만 해당<br>할인받은 금액은 다음 달 실적에서 제외</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
