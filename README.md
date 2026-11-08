@@ -17,6 +17,8 @@ Be Cherry Picker, Useful APP for Smart Consumer and Life, Save your Money!
 | [docs/04-data-strategy.md](docs/04-data-strategy.md) | 혜택 데이터 출처, 수집→추출→검수→게시, 커버리지, 전월 실적, 정확도 측정 | 확정 반영 |
 | [docs/05-process-and-roadmap.md](docs/05-process-and-roadmap.md) | 기획~개발 단계별 산출물, 배포 계획 | 최신 |
 | [docs/decisions-log.md](docs/decisions-log.md) | 결정 기록 (확정/제안/미정) | 최신 |
+| [docs/session-log.md](docs/session-log.md) | 세션별 인수인계 기록 | 최신 |
+| [SESSION_START.md](SESSION_START.md) | Claude Code 새 세션 시작 방법과 명령 | 최신 |
 | [project-context/](project-context/) | claude.ai 프로젝트 설명과 메모리 | 참고 |
 | [design/](design/README.md) | 화면 시안 13개 (3개 시나리오) | 초안 |
 | [slides/](slides/README.md) | 소개 슬라이드 7장 | 초안 |
