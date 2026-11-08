@@ -16,6 +16,7 @@ Be Cherry Picker, Useful APP for Smart Consumer and Life, Save your Money!
 | [docs/03-scenarios-and-features.md](docs/03-scenarios-and-features.md) | 사용자 유형, 시나리오(A~D), 기능 영역, 엣지케이스 | 참고 |
 | [docs/04-data-strategy.md](docs/04-data-strategy.md) | 혜택 데이터 출처, 수집→추출→검수→게시, 커버리지, 전월 실적, 정확도 측정 | 확정 반영 |
 | [docs/05-process-and-roadmap.md](docs/05-process-and-roadmap.md) | 기획~개발 단계별 산출물, 배포 계획 | 최신 |
+| [docs/06-recommendation-policy.md](docs/06-recommendation-policy.md) | 추천 계산 정책 (비교 단위, 금액 미입력, 한도, 동률, 합산, 모드) | 2단계 작성 중 |
 | [docs/decisions-log.md](docs/decisions-log.md) | 결정 기록 (확정/제안/미정) | 최신 |
 | [docs/session-log.md](docs/session-log.md) | 세션별 인수인계 기록 | 최신 |
 | [SESSION_START.md](SESSION_START.md) | Claude Code 새 세션 시작 방법과 명령 | 최신 |
