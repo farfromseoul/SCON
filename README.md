@@ -17,6 +17,10 @@ Be Cherry Picker, Useful APP for Smart Consumer and Life, Save your Money!
 | [docs/04-data-strategy.md](docs/04-data-strategy.md) | 혜택 데이터 출처, 수집→추출→검수→게시, 커버리지, 전월 실적, 정확도 측정 | 확정 반영 |
 | [docs/05-process-and-roadmap.md](docs/05-process-and-roadmap.md) | 기획~개발 단계별 산출물, 배포 계획 | 최신 |
 | [docs/06-recommendation-policy.md](docs/06-recommendation-policy.md) | 추천 계산 정책 (비교 단위, 금액 미입력, 한도, 동률, 합산, 모드, 전용 카드, 표시, 간편결제) | 2단계 확정 |
+| [docs/07-performance-limit-policy.md](docs/07-performance-limit-policy.md) | 실적·한도 정책 | 2단계 확정 |
+| [docs/08-exception-policy.md](docs/08-exception-policy.md) | 예외 처리 정책 | 2단계 확정 |
+| [docs/09-core-flow.md](docs/09-core-flow.md) | 핵심 플로우 | 2단계 확정 |
+| [data/](data/README.md) | 브랜드·업종 사전, 테스트 케이스 양식 | 초안 |
 | [docs/decisions-log.md](docs/decisions-log.md) | 결정 기록 (확정/제안/미정) | 최신 |
 | [docs/session-log.md](docs/session-log.md) | 세션별 인수인계 기록 | 최신 |
 | [SESSION_START.md](SESSION_START.md) | Claude Code 새 세션 시작 방법과 명령 | 최신 |
@@ -27,8 +31,8 @@ Be Cherry Picker, Useful APP for Smart Consumer and Life, Save your Money!
 ## 진행 단계
 
 1. 서비스 정의 — 초안 완료
-2. 요구사항·정책 정의 — **다음**
-3. 데이터 기획 (스키마, 첫 20장)
+2. 요구사항·정책 정의 — 완료
+3. 데이터 기획 (스키마, 첫 20장) — **다음**
 4. 화면 기획
 5. 디자인
 6. 설계

@@ -12,7 +12,9 @@ Claude Code는 이 파일을 먼저 읽고 작업한다.
 - 기획 1단계(서비스 정의) 산출물 초안 완료: `docs/01-service-overview.md`
 - 화면 시안(HTML 목업) 3개 시나리오·13개 화면: `design/mockups/`
 - 소개 슬라이드 7장: `slides/`
-- **다음 단계: 2단계 요구사항·정책 정의** (핵심 플로우, 추천 정책, 실적·한도 정책, 예외 처리 정책)
+- 2단계(요구사항·정책) 완료: `docs/06`~`09`
+- 브랜드·업종 사전 초안, 테스트 케이스 양식: `data/`
+- **다음 단계: 3단계 데이터 기획** (혜택 스키마, 보유 카드 7장 구조화, 업종 분류·대표 금액, 첫 20장 선정)
 
 ## 작업 방식 (기획자의 원칙 — 반드시 지킬 것)
 
@@ -85,6 +87,9 @@ docs/
   04-data-strategy.md         혜택 데이터 확보·검수·전월 실적 처리
   05-process-and-roadmap.md   단계별 산출물, 카드 확대, 배포 계획
   06-recommendation-policy.md 추천 계산 정책 (2단계 확정)
+  07-performance-limit-policy.md 실적·한도 정책
+  08-exception-policy.md      예외 처리 정책
+  09-core-flow.md             핵심 플로우
   decisions-log.md            결정 기록 (확정/제안/미정)
   session-log.md              세션별 인수인계 기록 (최신이 위)
 data/
