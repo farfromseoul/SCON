@@ -84,7 +84,7 @@ docs/
   03-scenarios-and-features.md  사용 시나리오, 기능 목록, 엣지케이스
   04-data-strategy.md         혜택 데이터 확보·검수·전월 실적 처리
   05-process-and-roadmap.md   단계별 산출물, 카드 확대, 배포 계획
-  06-recommendation-policy.md 추천 계산 정책 (2단계 작성 중)
+  06-recommendation-policy.md 추천 계산 정책 (2단계 확정)
   decisions-log.md            결정 기록 (확정/제안/미정)
   session-log.md              세션별 인수인계 기록 (최신이 위)
 data/
